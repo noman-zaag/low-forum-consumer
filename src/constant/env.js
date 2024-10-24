@@ -1,0 +1,2 @@
+export const ENV_VARIABLE = process.env.LOW_FORUM_API_DOMAIN;
+export const ENV_VARIABLE_FOR_LOCAL = process.env.NEXT_PUBLIC_LOW_FORUM_API_DOMAIN;
