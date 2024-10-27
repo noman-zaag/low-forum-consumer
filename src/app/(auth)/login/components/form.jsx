@@ -4,12 +4,16 @@ import React, { useState } from "react";
 import { Form, Input, Checkbox } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import Link from "next/link";
+import { handleLogin } from "./_action";
 
 const SignIn = () => {
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log("Form values:", values);
+
+    await handleLogin(values);
   };
 
   return (
@@ -17,11 +21,11 @@ const SignIn = () => {
       <div className="w-full max-w-[600px] bg-[#F3F4F5] p-8 rounded-lg border-2 border-border_color">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img src={`/assets/icon/icon.svg`} alt="Lawying Logo" className="w-[192px] h-[60px]" />
+          <img src={`/assets/icon/icon.svg`} alt="Lawying Logo asdf" className="w-[192px] h-[60px]" />
         </div>
 
         <h2 className="text-2xl font-semibold text-left mb-2">Sign In</h2>
-        <p className="text-[#4A4A4A] text-left mb-6 font-light">Please fill up the form to sign in!</p>
+        <span className="text-[#4A4A4A] text-left mb-6 font-light">Please fill up the form to sign in!</span>
 
         <Form layout="vertical" onFinish={onFinish}>
           <Form.Item
@@ -54,7 +58,7 @@ const SignIn = () => {
           </div>
 
           <Form.Item>
-            <button htmlType="submit" className="w-full bg-primary text-white font-semibold h-[52px] rounded">
+            <button type="submit" className="w-full bg-primary text-white font-semibold h-[52px] rounded">
               Sign In
             </button>
           </Form.Item>

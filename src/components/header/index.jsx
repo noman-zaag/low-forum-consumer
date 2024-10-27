@@ -24,7 +24,7 @@ const Header = ({ children }) => {
         <div className="flex flex-row items-center justify-between h-full">
           {/* Icons part */}
           <div className="flex items-end gap-12">
-            <Image src={Icons.iconWhite} height={1000} width={1000} className="h-[30px] w-[105px]" />
+            <Image alt="logo" src={Icons.iconWhite} height={1000} width={1000} className="h-[30px] w-[105px]" />
 
             <div className="hidden lg:flex flex-row gap-4 text-white">
               {menus.map((menu, index) => {

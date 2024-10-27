@@ -4,3 +4,6 @@ const domain = ENV_VARIABLE ?? ENV_VARIABLE_FOR_LOCAL ? ENV_VARIABLE ?? ENV_VARI
 
 // BaseURL
 export let BASEURL = domain;
+
+// auth
+export const LOGIN_URL = `${BASEURL}/users/login`;

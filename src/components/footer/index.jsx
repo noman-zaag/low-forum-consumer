@@ -36,6 +36,7 @@ const Footer = () => {
               className="w-[135px] h-[40px]"
               loading="eager"
               quality={100}
+              alt="logo"
             />
             <p className="mt-4 leading-[30px] text-justify">
               Welcome to Lawying, a dedicated platform for legal professionals to connect, collaborate, and discuss law
