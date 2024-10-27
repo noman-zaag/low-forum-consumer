@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
@@ -15,9 +16,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        <Header />
-        {children}
-        <Footer />
+        <AntdRegistry>
+          <Header />
+          {children}
+          <Footer />
+        </AntdRegistry>
       </body>
     </html>
   );

@@ -15,6 +15,7 @@ module.exports = {
         text_primary: "",
         text_secondary: "#4A4A4A ",
         background1: "#F3F4F5",
+        border_color: "#F3F4F53D",
       },
       screens: {},
     },
