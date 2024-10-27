@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Container from "../common/container";
 import Icons from "../../../public/assets/icon";
@@ -5,8 +7,10 @@ import Image from "next/image";
 import { Divider, Input } from "antd";
 import { IoSearchOutline } from "react-icons/io5";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Header = ({ children }) => {
+  const router = useRouter();
   const menus = [
     { name: "Home", link: "/" },
     { name: "Forum", link: "" },
@@ -49,8 +53,18 @@ const Header = ({ children }) => {
             </div>
             <Divider type="vertical" className="h-[40px] bg-[#649695]" style={{ height: "20px" }} />
             <div className="hidden md:flex items-center justify-center gap-4">
-              <button className="py-2 px-0 text-white rounded w-[101px] h-[48px] font-semibold">Log In</button>
-              <button className="border p- text-white rounded w-[101px] h-[48px] font-semibold">Sign Up</button>
+              <button
+                className="py-2 px-0 text-white rounded w-[101px] h-[48px] font-semibold"
+                onClick={() => router.push("/login")}
+              >
+                Log In
+              </button>
+              <button
+                className="border p- text-white rounded w-[101px] h-[48px] font-semibold"
+                onClick={() => router.push("/sign-up")}
+              >
+                Sign Up
+              </button>
             </div>
           </div>
         </div>
