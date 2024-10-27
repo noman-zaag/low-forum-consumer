@@ -1,5 +1,6 @@
 import Container from "@/components/common/container";
-import Images from "../../public/assets/images";
+import Icons from "../../public/assets/icon";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -27,8 +28,11 @@ export default function Home() {
               Connect with lawyers and legal experts, ask questions, and share knowledge on various branches of law, all
               on an easy-to-use platform.
             </p>
-            <button className="bg-white text-black px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition">
-              Get Started
+            <button className="flex gap-3 items-center bg-white text-primary px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition">
+              <span>Get Started</span>
+              <span>
+                <Image src={Icons.heroButtonIcon} className="h-5 w-5" height="1000" width="1000" quality={100} />
+              </span>
             </button>
           </div>
         </Container>

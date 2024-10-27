@@ -6,12 +6,12 @@ import { FaRegCopyright } from "react-icons/fa";
 
 const Footer = () => {
   const lawyingLinks = [
-    { name: "Home", link: "" },
+    { name: "Home", link: "/" },
     { name: "Forum", link: "" },
-    { name: "Who We Are", link: "" },
-    { name: "Connect", link: "" },
-    { name: "Terms & Conditions", link: "" },
-    { name: "Privacy Policy", link: "" },
+    { name: "Who We Are", link: "/about-us" },
+    { name: "Connect", link: "/contact-us" },
+    { name: "Terms & Conditions", link: "/terms-and-condition" },
+    { name: "Privacy Policy", link: "/privacy-policy" },
   ];
 
   const forumCategories = [

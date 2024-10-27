@@ -4,13 +4,14 @@ import Icons from "../../../public/assets/icon";
 import Image from "next/image";
 import { Divider, Input } from "antd";
 import { IoSearchOutline } from "react-icons/io5";
+import Link from "next/link";
 
 const Header = ({ children }) => {
   const menus = [
-    { name: "Home", link: "" },
+    { name: "Home", link: "/" },
     { name: "Forum", link: "" },
-    { name: "Who We Are", link: "" },
-    { name: "Contact", link: "" },
+    { name: "Who We Are", link: "/about-us" },
+    { name: "Contact", link: "/contact-us" },
   ];
 
   return (
@@ -24,9 +25,9 @@ const Header = ({ children }) => {
             <div className="hidden lg:flex flex-row gap-4 text-white">
               {menus.map((menu, index) => {
                 return (
-                  <p className="text-sm font-medium cursor-pointer" key={index}>
+                  <Link href={menu.link} className="text-sm font-medium cursor-pointer" key={index}>
                     {menu.name}
-                  </p>
+                  </Link>
                 );
               })}
             </div>
