@@ -39,9 +39,10 @@ const SignIn = () => {
       router.refresh();
 
       // check QueryParams and redirect.
+      router.push("/");
     }
 
-    const userInfo = getCookie(USER_INFO);
+    // const userInfo = getCookie(USER_INFO);
     // console.log(JSON.parse(userInfo));
   };
 
