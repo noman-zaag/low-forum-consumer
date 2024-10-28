@@ -4,7 +4,7 @@ const VerifyOtpLoading = () => {
   return (
     <div className="flex items-center justify-center min-h-scr bg-white my-[80px] animate-pulse">
       <div className="w-full max-w-[600px] bg-[#F3F4F5] p-8 rounded-lg border-2 border-gray-200 text-black">
-        <div className="flex w-full justify-center h-6 bg-gray-200 rounded w-1/4 my-3"></div>
+        <div className="flex justify-center h-6 bg-gray-200 rounded w-1/4 my-3"></div>
         <div className="w-full flex justify-center pb-16 pt-4 sm:pt-4">
           <div className="w-24 h-24 bg-gray-200 rounded"></div>
         </div>
