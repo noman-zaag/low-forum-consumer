@@ -1,8 +1,13 @@
 import Container from "@/components/common/container";
 import Icons from "../../public/assets/icon";
 import Image from "next/image";
+import ForumCategoryCard from "@/components/home/FormCategoryCard";
+import { FaUniversity } from "react-icons/fa";
+import { getForumCategory } from "@/services/HomeService";
 
-export default function Home() {
+export default async function Home() {
+  const res = await getForumCategory();
+  console.log(res.data.docs);
   return (
     <div className="">
       {/* Hero section */}
@@ -46,6 +51,30 @@ export default function Home() {
       </div>
 
       {/* Category section */}
+      <Container className={"my-16"}>
+        <div>
+          <p>Category section.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {res.data.docs.slice(0, 8).map((category, index) => (
+              <ForumCategoryCard
+                key={index}
+                icon={category.icon}
+                title={category.name}
+                description={category.description}
+                posts={category.posts}
+              />
+            ))}
+          </div>
+
+          {/* <ForumCategoryCard
+            icon={<FaUniversity size={32} />}
+            title="Bankruptcy"
+            description="asdf asdf asdf asdfioerio heljkhalksjdh lskdajf halskjfhlkjasdfhlakjsdfh lajskdfh l;aklsdjf ;alksdfj ;alskdfj a;sldkfja;sdlkfja;s a;sdklfjas;dlkfj a;sdkfj ;saldkfj;asdklfj a;sdlkfj s;dk;asldkfj  Discuss issues related to commercial law, bankruptcy filings, creditor rights, and debt restructuring."
+            posts={12545}
+          /> */}
+        </div>
+      </Container>
     </div>
   );
 }
