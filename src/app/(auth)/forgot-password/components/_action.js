@@ -1,15 +1,14 @@
 "use server";
 
-import { LOGIN_URL } from "@/constant/apiUrls";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { RESET_PASSWORD } from "@/constant/apiUrls";
 
-export const handleLogin = async (values) => {
+export const handleForgotPassword = async (values) => {
   if (values) {
     let result;
+
     try {
-      const res = await fetch(LOGIN_URL, {
-        method: "POST",
+      const res = await fetch(RESET_PASSWORD, {
+        method: "PATCH",
         body: JSON.stringify(values),
         headers: {
           "Content-Type": "application/json",
@@ -18,7 +17,7 @@ export const handleLogin = async (values) => {
 
       if (!res.ok) {
         const error = await res.json();
-        return { message: error.message, error: true };
+        return { message: error.message || error.error, error: true };
       }
 
       result = await res.json();
@@ -26,7 +25,7 @@ export const handleLogin = async (values) => {
       return { message: e?.message, error: true };
     }
 
-    return { message: "Login Successful", error: false, result };
+    return { message: result.message || "OTP send Successfully.", error: false, result };
   }
 
   // revalidatePath("/");

@@ -1,23 +1,53 @@
 "use client";
 
-import React, { useState } from "react";
-import { Form, Input, Checkbox } from "antd";
+import React from "react";
+import { Form, Input, Checkbox, Spin } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import Link from "next/link";
 import { handleLogin } from "./_action";
+import useMessageToast from "@/hooks/useMessageToast";
+import { getCookie, setCookie } from "cookies-next";
+import { USER_INFO, USER_PERMISSION, USER_TOKEN } from "@/constant/cookiesKeys";
+import { useRouter } from "next/navigation";
+import { useUserContext } from "@/contexts/UserContextProvider";
 
 const SignIn = () => {
-  const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { contextHolder, showMessage, closeMessage } = useMessageToast();
+  const { setUser } = useUserContext();
+  const router = useRouter();
 
   const onFinish = async (values) => {
-    console.log("Form values:", values);
+    showMessage("loading", "You are logging. Please Wait...");
 
-    await handleLogin(values);
+    const response = await handleLogin(values);
+
+    // Close the loading message immediately after the response
+    closeMessage();
+
+    if (response.error) {
+      showMessage("error", response.message);
+    } else {
+      // User logging successfully
+      // console.log(response);
+
+      showMessage("success", response.message);
+      setCookie(USER_TOKEN, response.result.token);
+      setCookie(USER_INFO, response.result.user);
+      setCookie(USER_PERMISSION, response.result.permissions);
+      setUser(response.result.user); // set user info in the context immediately.
+
+      router.refresh();
+
+      // check QueryParams and redirect.
+    }
+
+    const userInfo = getCookie(USER_INFO);
+    // console.log(JSON.parse(userInfo));
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white p-4">
+    <div className="flex items-center justify-center min-h-scr bg-white my-[80px]">
+      {/* <Spin fullscreen spinning={loading} /> */}
       <div className="w-full max-w-[600px] bg-[#F3F4F5] p-8 rounded-lg border-2 border-border_color">
         {/* Logo */}
         <div className="flex justify-center mb-6">
@@ -39,10 +69,10 @@ const SignIn = () => {
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true, message: "Password must be at least 6 characters", min: 6 }]}
+            rules={[{ required: true, message: "Password must be at least 8 characters", min: 8 }]}
           >
             <Input.Password
-              placeholder="Min. 6 characters"
+              placeholder="Min. 8 characters"
               iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               className="h-[52px]"
             />
@@ -52,9 +82,9 @@ const SignIn = () => {
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
-            <a href="#" className="text-sm text-primary hover:underline">
+            <Link href="/forgot-password" className="text-sm text-primary hover:underline">
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           <Form.Item>
@@ -71,6 +101,8 @@ const SignIn = () => {
           </Link>
         </p>
       </div>
+
+      {contextHolder}
     </div>
   );
 };

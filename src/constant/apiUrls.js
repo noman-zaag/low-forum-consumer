@@ -6,4 +6,9 @@ const domain = ENV_VARIABLE ?? ENV_VARIABLE_FOR_LOCAL ? ENV_VARIABLE ?? ENV_VARI
 export let BASEURL = domain;
 
 // auth
-export const LOGIN_URL = `${BASEURL}/users/login`;
+export const USERS_URL = `${BASEURL}/users`;
+export const LOGIN_URL = `${USERS_URL}/login`;
+export const SIGNUP_URL = `${USERS_URL}/customer/register`;
+export const RESET_PASSWORD = `${USERS_URL}/reset-password`;
+export const CHANGE_PASSWORD = `${USERS_URL}/change-password`;
+export const VERIFY_OTP = `${USERS_URL}/verify-otp`;

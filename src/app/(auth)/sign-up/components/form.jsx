@@ -1,16 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
-import { Form, Input, Button, Checkbox, Select } from "antd";
+import { useState } from "react";
+import { Form, Input, Checkbox, Select } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { FaLock } from "react-icons/fa";
 import Link from "next/link";
+import { handleSignUp } from "./_action";
+import useMessageToast from "@/hooks/useMessageToast";
+import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
+  const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const { contextHolder, showMessage, closeMessage } = useMessageToast();
 
-  const onFinish = (values) => {
-    console.log("Form values:", values);
+  const onFinish = async (values) => {
+    showMessage("loading", "Please wait, User is signing up.");
+
+    const response = await handleSignUp(values);
+
+    // Close the loading message immediately after the response
+    closeMessage();
+
+    if (response.error) {
+      showMessage("error", response.message);
+    } else {
+      // User logging successfully
+
+      showMessage("success", response.message);
+      // setCookie(USER_TOKEN, response.result.user.token);
+      // setCookie(USER_INFO, response.result.user);
+      // setCookie(USER_PERMISSION, response.result.permissions);
+      // setUser(response.result.user); // set user info in the context immediately.
+
+      router.refresh();
+      router.push("/login");
+    }
   };
 
   const occupationOptions = [
@@ -41,7 +65,7 @@ const SignUpForm = () => {
 
         <Form layout="vertical" onFinish={onFinish}>
           <Form.Item
-            name="email"
+            name="firstName"
             label="Full Name"
             rules={[{ required: true, type: "text", message: "Please enter you full name" }]}
           >
@@ -49,7 +73,7 @@ const SignUpForm = () => {
           </Form.Item>
 
           <Form.Item
-            name="email"
+            name="primaryEmail"
             label="Email Id"
             rules={[{ required: true, type: "email", message: "Please enter a valid email" }]}
           >
@@ -59,10 +83,10 @@ const SignUpForm = () => {
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true, message: "Password must be at least 6 characters", min: 6 }]}
+            rules={[{ required: true, message: "Password must be at least 8 characters", min: 8 }]}
           >
             <Input.Password
-              placeholder="Min. 6 characters"
+              placeholder="Min. 8 characters"
               iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               className="h-[52px]"
             />
@@ -71,10 +95,27 @@ const SignUpForm = () => {
           <Form.Item
             name="confirmPassword"
             label="Confirm Password"
-            rules={[{ required: true, message: "Password must be at least 6 characters", min: 6 }]}
+            rules={[
+              {
+                required: true,
+                message: "Please re-enter your password!",
+              },
+              {
+                min: 8,
+                message: "Password must be at least 8 characters long.",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error("The new password that you entered does not match!"));
+                },
+              }),
+            ]}
           >
             <Input.Password
-              placeholder="Min. 6 characters"
+              placeholder="Min. 8 characters"
               iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               className="h-[52px]"
             />
@@ -153,6 +194,8 @@ const SignUpForm = () => {
           </Link>
         </p>
       </div>
+
+      {contextHolder}
     </div>
   );
 };

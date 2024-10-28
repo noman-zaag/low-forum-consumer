@@ -1,14 +1,12 @@
 "use server";
 
-import { LOGIN_URL } from "@/constant/apiUrls";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { SIGNUP_URL } from "@/constant/apiUrls";
 
-export const handleLogin = async (values) => {
+export const handleSignUp = async (values) => {
   if (values) {
     let result;
     try {
-      const res = await fetch(LOGIN_URL, {
+      const res = await fetch(SIGNUP_URL, {
         method: "POST",
         body: JSON.stringify(values),
         headers: {
@@ -26,7 +24,7 @@ export const handleLogin = async (values) => {
       return { message: e?.message, error: true };
     }
 
-    return { message: "Login Successful", error: false, result };
+    return { message: "Register Successfully Done.", error: false, result };
   }
 
   // revalidatePath("/");

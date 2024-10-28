@@ -4,6 +4,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 
 import "./globals.css";
+import ContextWrapper from "@/contexts/contextWrapper";
 
 export const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +18,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <AntdRegistry>
-          <Header />
-          {children}
-          <Footer />
+          <ContextWrapper>
+            <Header />
+            {children}
+            <Footer />
+          </ContextWrapper>
         </AntdRegistry>
       </body>
     </html>
