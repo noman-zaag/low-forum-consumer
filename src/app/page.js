@@ -2,11 +2,14 @@ import Container from "@/components/common/container";
 import Icons from "../../public/assets/icon";
 import Image from "next/image";
 import ForumCategoryCard from "@/components/home/FormCategoryCard";
-import { FaUniversity } from "react-icons/fa";
-import { getForumCategory } from "@/services/HomeService";
+import { getForumCategory, getForumPost } from "@/services/HomeService";
+import SinglePostCard from "@/components/home/SinglePostCard";
+import { GoArrowRight } from "react-icons/go";
+import Link from "next/link";
 
 export default async function Home() {
   const res = await getForumCategory();
+  const forumPosts = await getForumPost();
 
   return (
     <div className="">
@@ -56,7 +59,7 @@ export default async function Home() {
           <p className="font-semibold text-sm md:text-base lg:text-[20px]">All Fo rum Categories</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {res.data.docs.slice(0, 8).map((category, index) => (
+            {res?.data?.docs?.slice(0, 8).map((category, index) => (
               <ForumCategoryCard
                 key={index}
                 icon={category.icon}
@@ -70,6 +73,25 @@ export default async function Home() {
       </Container>
 
       {/* Post section */}
+      <Container className={"mb-16"}>
+        <div className="flex items-center justify-between mb-4">
+          <p className="font-semibold text-sm md:text-base lg:text-[20px]">Latest Posts</p>
+          <button className="flex gap-3 items-center bg-primary text-white px-6 py-3 rounded-md font-semibold">
+            <Link href={"/forum"}>
+              <span>Show All Post</span>
+            </Link>
+            <span>
+              <GoArrowRight className="h-5 w-5 text-white" />
+            </span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 gap-">
+          {forumPosts?.data?.docs.slice(0, 5).map((post, index) => {
+            return <SinglePostCard key={index} post={post} />;
+          })}
+        </div>
+      </Container>
     </div>
   );
 }

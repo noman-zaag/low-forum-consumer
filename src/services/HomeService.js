@@ -1,8 +1,21 @@
 import axiosPublicInstance from "@/config/axiosPublic";
-import { FORUM_CATEGORIES } from "@/constant/apiUrls";
+import { FORUM_CATEGORIES, GET_POSTS } from "@/constant/apiUrls";
 
 export const getForumCategory = async () => {
-  const response = await axiosPublicInstance.get(FORUM_CATEGORIES);
+  try {
+    const response = await axiosPublicInstance.get(FORUM_CATEGORIES);
+    return response;
+  } catch (e) {
+    console.log(e?.message);
+  }
+};
 
-  return response;
+export const getForumPost = async (params) => {
+  try {
+    const res = await axiosPublicInstance.get(GET_POSTS);
+
+    return res;
+  } catch (e) {
+    console.log(e?.message);
+  }
 };

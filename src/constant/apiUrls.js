@@ -16,3 +16,4 @@ export const VERIFY_OTP = `${USERS_URL}/verify-otp`;
 // Home page.
 export const FORUM_CATEGORIES = `${BASEURL}/categories`;
 export const VIEW_IMAGE = `${BASEURL}/files/view-image?key=`;
+export const GET_POSTS = `${BASEURL}/posts`;
