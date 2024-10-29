@@ -7,7 +7,7 @@ import { getForumCategory } from "@/services/HomeService";
 
 export default async function Home() {
   const res = await getForumCategory();
-  console.log(res.data.docs);
+
   return (
     <div className="">
       {/* Hero section */}
@@ -52,8 +52,8 @@ export default async function Home() {
 
       {/* Category section */}
       <Container className={"my-16"}>
-        <div>
-          <p>Category section.</p>
+        <div className="flex flex-col gap-6">
+          <p className="font-semibold text-sm md:text-base lg:text-[20px]">All Fo rum Categories</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {res.data.docs.slice(0, 8).map((category, index) => (
@@ -66,15 +66,10 @@ export default async function Home() {
               />
             ))}
           </div>
-
-          {/* <ForumCategoryCard
-            icon={<FaUniversity size={32} />}
-            title="Bankruptcy"
-            description="asdf asdf asdf asdfioerio heljkhalksjdh lskdajf halskjfhlkjasdfhlakjsdfh lajskdfh l;aklsdjf ;alksdfj ;alskdfj a;sldkfja;sdlkfja;s a;sdklfjas;dlkfj a;sdkfj ;saldkfj;asdklfj a;sdlkfj s;dk;asldkfj  Discuss issues related to commercial law, bankruptcy filings, creditor rights, and debt restructuring."
-            posts={12545}
-          /> */}
         </div>
       </Container>
+
+      {/* Post section */}
     </div>
   );
 }
