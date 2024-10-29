@@ -3,7 +3,7 @@ import React from "react";
 
 const ForumCategoryCard = ({ icon, title, description, posts }) => {
   return (
-    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 md:gap-4 bg-gray-100 p-2 sm:p-4 md:p-6  rounded border border-gray-200">
+    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 md:gap-4 bg-gray-100 p-2 sm:p-4 md:p-6  rounded border border-gray-200 hover:border-primary duration-700">
       {/* Icon */}
       <img src={`${VIEW_IMAGE}${icon}`} className=" mr-4 h-12 w-12 text-teal-500" alt="Icon" />
       <div className="flex gap-2 md:gap-4 flex-col lg:flex-row">
