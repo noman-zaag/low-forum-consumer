@@ -21,7 +21,7 @@ const ForumPage = async ({ searchParams }) => {
 
         {/* Main Content */}
         <div className="col-span-1 md:col-span-9 w-full  px-">
-          <AllPostComponent allPost={getPost?.data?.docs} />
+          <AllPostComponent allPost={getPost?.data?.docs} categoryItem={categoryForFilter} />
         </div>
       </Container>
     </div>

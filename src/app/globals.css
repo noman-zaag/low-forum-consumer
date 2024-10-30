@@ -51,3 +51,7 @@ input::placeholder {
 :where(.css-dev-only-do-not-override-ni1kz0).ant-checkbox-checked .ant-checkbox-inner { 
   background-color: #248280 !important;
   border-color: #248280 !important;}
+
+  :where(.css-dev-only-do-not-override-ni1kz0).ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector{
+    background-color: #F3F4F5 !important;
+  }
