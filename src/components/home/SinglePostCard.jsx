@@ -18,7 +18,7 @@ const SinglePostCard = ({ post, className }) => {
   }
 
   return (
-    <div className={`py-3 flex flex-col gap-2 rounded duration-700 border-b ${className}`}>
+    <div className={`py-3 flex flex-col gap-2 rounded duration-700 ${className}`}>
       {/* user info */}
       <div className="flex items-center justify-start gap-2">
         {/* name & image */}

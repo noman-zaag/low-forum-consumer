@@ -119,8 +119,8 @@ const FilterComponent = ({ categoryItem }) => {
 
   return (
     <div className="min-h-32">
-      <div className="py-4">
-        <p className="">Filter By</p>
+      <div className="pb-4">
+        <p className="font-semibold text-xl">Filter By</p>
       </div>
 
       <Divider style={{ padding: 0, margin: 0 }} />

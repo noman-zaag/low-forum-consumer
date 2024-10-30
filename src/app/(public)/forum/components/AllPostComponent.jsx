@@ -104,7 +104,7 @@ const AllPostComponent = ({ allPost, categoryItem }) => {
         {allPost?.length ? (
           allPost?.map((post, index) => {
             return (
-              <div className="w-full hover:bg-background1 duration-500">
+              <div className="w-full hover:bg-background1 duration-500 rounded-md border-b ">
                 <SinglePostCard key={index} post={post} className="px-4" />
               </div>
             );
