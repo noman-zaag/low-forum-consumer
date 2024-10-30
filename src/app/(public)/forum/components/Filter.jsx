@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, Checkbox, Collapse, Divider, Radio } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -8,7 +8,19 @@ const FilterComponent = ({ categoryItem }) => {
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedRadio, setSelectedRadio] = useState(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
   //   const updatedSearchParams = new URLSearchParams(searchParams.toString());
+
+  // Initialize checkedItems and selectedRadio from URL parameters
+  useEffect(() => {
+    const categoryIds = searchParams.getAll("categoryId");
+    setCheckedItems(categoryIds); // Set initial checked categories
+
+    const sortBy = searchParams.get("sortBy");
+    if (sortBy) {
+      setSelectedRadio(sortBy); // Set initial selected radio option
+    }
+  }, [searchParams]);
 
   // handle change checkbox value
   const handleCheckboxChange = (key, e) => {

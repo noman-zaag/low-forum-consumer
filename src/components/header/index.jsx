@@ -15,12 +15,16 @@ const Header = ({ children }) => {
   const { user } = useUserContext(); // Get user and logout function from UserContext
   const menus = [
     { name: "Home", link: "/" },
-    { name: "Forum", link: "" },
+    { name: "Forum", link: "/forum" },
     { name: "Who We Are", link: "/about-us" },
     { name: "Contact", link: "/contact-us" },
   ];
 
-  console.log(user);
+  const getIntoHome = () => {
+    router.push("/");
+  };
+
+  // console.log(user);
 
   return (
     <div className="bg-primary py-[20px] h-[88px]">
@@ -28,7 +32,14 @@ const Header = ({ children }) => {
         <div className="flex flex-row items-center justify-between h-full">
           {/* Icons part */}
           <div className="flex items-end gap-12">
-            <Image alt="logo" src={Icons.iconWhite} height={1000} width={1000} className="h-[30px] w-[105px]" />
+            <Image
+              alt="logo"
+              src={Icons.iconWhite}
+              height={1000}
+              width={1000}
+              className="h-[30px] w-[105px] cursor-pointer"
+              onClick={getIntoHome}
+            />
 
             <div className="hidden lg:flex flex-row gap-4 text-white">
               {menus.map((menu, index) => {

@@ -104,14 +104,14 @@ const CreatePostModal = ({ handleCreatePost, categoryItem, closeModal }) => {
 
         {/* Footer */}
 
-        <div className="flex gap-2 items-center justify-between">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-3 items-center justify-between">
           <p className="text-text_secondary text-xs">
             * Your post will be reviewed by our admin to ensure it meets our guidelines. Once approved, it will be
             published on the forum page.
           </p>
           <button
             type="submit"
-            className="bg-primary px-3 py-3 text-white rounded-[25px] h-12 font-semibold whitespace-nowrap"
+            className="bg-primary px-3 py-3 text-white rounded-[25px] h-12 font-semibold whitespace-nowrap w-full md:w-[180px]"
           >
             Post for Review
           </button>
