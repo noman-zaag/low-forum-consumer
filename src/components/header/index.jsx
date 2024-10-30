@@ -79,7 +79,10 @@ const Header = ({ children }) => {
                     quality={100}
                     alt="Notification icon"
                   />
-                  <div className="flex items-center justify-center h-screen">
+                  <div
+                    className="flex items-center justify-center h-screen"
+                    onClick={() => router.push("/profile/my-account")}
+                  >
                     {/* Outer circle with border */}
                     <div className="w-10 h-10 rounded-full border-2 border-teal-500 overflow-hidden">
                       <Image
@@ -103,7 +106,10 @@ const Header = ({ children }) => {
                     quality={100}
                     alt="Notification icon"
                   />
-                  <div className="flex items-center justify-center h-screen">
+                  <div
+                    className="flex items-center justify-center h-screen"
+                    onClick={() => router.push("/profile/my-account")}
+                  >
                     {/* Outer circle with border */}
                     <div className="w-10 h-10 rounded-full border-2 border-teal-500 overflow-hidden">
                       <Image
