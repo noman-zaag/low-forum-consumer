@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { getCookie, setCookie, deleteCookie } from "cookies-next";
-import { USER_INFO } from "@/constant/cookiesKeys";
+import { USER_INFO, USER_PERMISSION, USER_TOKEN } from "@/constant/cookiesKeys";
+import { useRouter } from "next/navigation";
 
 // Create the UserContext
 const UserContext = createContext(null);
@@ -13,6 +14,7 @@ export const useUserContext = () => {
 // UserProvider component to provide user state and login tracking
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null); // User state to track login and user info
+  const router = useRouter();
 
   // Function to get user info from cookies
   const fetchUserFromCookies = () => {
@@ -39,7 +41,11 @@ export const UserProvider = ({ children }) => {
   // Function to handle user logout
   const logout = () => {
     deleteCookie(USER_INFO);
+    deleteCookie(USER_TOKEN);
+    deleteCookie(USER_PERMISSION);
+
     setUser(null);
+    router.push("/");
   };
 
   // Provide the user state and functions to the rest of the app

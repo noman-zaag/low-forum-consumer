@@ -56,7 +56,7 @@ export default async function Home() {
       {/* Category section */}
       <Container className={"my-16"}>
         <div className="flex flex-col gap-6">
-          <p className="font-semibold text-sm md:text-base lg:text-[20px]">All Fo rum Categories</p>
+          <p className="font-semibold text-sm md:text-base lg:text-[20px]">All Forum Categories</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {res?.data?.docs?.slice(0, 8).map((category, index) => (

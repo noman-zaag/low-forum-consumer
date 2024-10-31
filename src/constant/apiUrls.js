@@ -21,3 +21,6 @@ export const GET_POSTS = `${BASEURL}/posts`;
 // Post page.
 export const CREATE_POST = `${BASEURL}/posts`;
 export const FOR_AXIOS = `/posts`;
+
+// profile
+export const GET_RECENT_POST_URL = `${BASEURL}/posts/my-posts`;

@@ -5,7 +5,7 @@ import Container from "../common/container";
 import Icons from "../../../public/assets/icon";
 import Image from "next/image";
 import { Divider, Input } from "antd";
-import { IoSearchOutline, IoNotificationsOutline } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/contexts/UserContextProvider";
