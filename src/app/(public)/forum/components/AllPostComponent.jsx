@@ -14,6 +14,7 @@ import { getCookie } from "cookies-next";
 import { useSearchParams } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 import { VIEW_IMAGE } from "@/constant/apiUrls";
+import PostList from "./PostList";
 
 const AllPostComponent = ({ allPost, categoryItem }) => {
   const { contextHolder, showMessage, closeMessage } = useMessageToast();
@@ -164,18 +165,14 @@ const AllPostComponent = ({ allPost, categoryItem }) => {
               </div>
             ) : null}
           </div>
-          <p className="whitespace-nowrap p-[10px] text-base">{allPost?.length} posts</p>
+          {filteredItems?.length !== 0 ? (
+            <p className="whitespace-nowrap p-[10px] text-base">{allPost?.length} posts</p>
+          ) : null}
         </div>
 
         <div className="flex flex-col">
           {allPost?.length ? (
-            allPost?.map((post, index) => {
-              return (
-                <div key={index} className="w-full hover:bg-background1 duration-500 rounded-md border-b">
-                  <SinglePostCard post={post} className="px-2" />
-                </div>
-              );
-            })
+            <PostList posts={allPost} />
           ) : (
             <div
               className="flex flex-col items-center justify-center h-full p-6 rounded-lg shadow-md"

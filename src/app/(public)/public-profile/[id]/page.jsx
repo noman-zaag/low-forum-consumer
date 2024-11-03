@@ -7,7 +7,7 @@ import SinglePost from "@/app/(protected)/profile/my-account/components/singlePo
 const getSingleProfileInfo = async (id) => {
   try {
     const response = await axiosPublicInstance.get(`${USERS_URL}?id=${id}`);
-    console.log(await response);
+
     return response;
   } catch (e) {
     console.log(e?.message);
@@ -19,7 +19,6 @@ const PublicProfilePage = async ({ params }) => {
   const userProfile = await getSingleProfileInfo(id);
 
   const user = userProfile?.data?.doc;
-  console.log(user);
 
   return (
     <Container className={"py-16"}>
@@ -65,7 +64,7 @@ const PublicProfilePage = async ({ params }) => {
           </div>
         </div>
 
-        {user.recentPosts.length ? (
+        {userProfile && user?.recentPosts?.length ? (
           <div className="flex flex-col gap-2">
             {user.recentPosts.map((post, index) => {
               return (

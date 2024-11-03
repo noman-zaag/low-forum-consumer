@@ -4,6 +4,7 @@ import FilterComponent from "./components/Filter";
 import AllPostComponent from "./components/AllPostComponent";
 import { getForumCategory } from "@/services/HomeService";
 import { getForumFilterPost } from "@/services/ForumFilterService";
+import LoadMorePost from "./components/LoadMorePost";
 
 const ForumPage = async ({ searchParams }) => {
   const categories = await getForumCategory();
@@ -22,6 +23,8 @@ const ForumPage = async ({ searchParams }) => {
         {/* Main Content */}
         <div className="col-span-1 md:col-span-9 w-full  px-">
           <AllPostComponent allPost={getPost?.data?.docs} categoryItem={categoryForFilter} />
+
+          <LoadMorePost />
         </div>
       </Container>
     </div>

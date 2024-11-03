@@ -14,6 +14,8 @@ export const getForumFilterPost = async (params) => {
       params: {
         sortBy: params.sortBy,
         categoryId: categoryIdParam,
+        page: params.page || 1,
+        limit: params.limit || 5,
       },
 
       paramsSerializer: (params) => {
