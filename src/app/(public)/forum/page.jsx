@@ -15,7 +15,7 @@ const ForumPage = async ({ searchParams }) => {
     <div>
       <Container className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-16 my-8 md:my-16 w-full">
         {/* Sidebar - Hidden on smaller screens */}
-        <div className="hidden md:block md:col-span-3">
+        <div className="hidden md:block md:col-span-3 sticky top-10 self-start">
           <FilterComponent categoryItem={categoryForFilter} />
         </div>
 

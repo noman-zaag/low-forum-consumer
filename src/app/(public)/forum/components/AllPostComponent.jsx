@@ -13,6 +13,7 @@ import { USER_TOKEN } from "@/constant/cookiesKeys";
 import { getCookie } from "cookies-next";
 import { useSearchParams } from "next/navigation";
 import { IoClose } from "react-icons/io5";
+import { VIEW_IMAGE } from "@/constant/apiUrls";
 
 const AllPostComponent = ({ allPost, categoryItem }) => {
   const { contextHolder, showMessage, closeMessage } = useMessageToast();
@@ -105,7 +106,7 @@ const AllPostComponent = ({ allPost, categoryItem }) => {
                       height={1000}
                       width={1000}
                       quality={100}
-                      src={user?.profilePicture}
+                      src={` ${VIEW_IMAGE}${user?.profilePicture}`}
                       className="w-full h-full object-cover rounded-full"
                       alt="Profile picture"
                     />
@@ -170,8 +171,8 @@ const AllPostComponent = ({ allPost, categoryItem }) => {
           {allPost?.length ? (
             allPost?.map((post, index) => {
               return (
-                <div className="w-full hover:bg-background1 duration-500 rounded-md border-b">
-                  <SinglePostCard key={index} post={post} className="px-2" />
+                <div key={index} className="w-full hover:bg-background1 duration-500 rounded-md border-b">
+                  <SinglePostCard post={post} className="px-2" />
                 </div>
               );
             })

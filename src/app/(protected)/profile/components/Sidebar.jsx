@@ -9,6 +9,7 @@ import { IoDocumentTextOutline, IoNotificationsOutline } from "react-icons/io5";
 import { RiUserLine } from "react-icons/ri";
 import { RxExit } from "react-icons/rx";
 import { usePathname } from "next/navigation";
+import { VIEW_IMAGE } from "@/constant/apiUrls";
 
 const Sidebar = () => {
   const { user, logout } = useUserContext();
@@ -24,7 +25,7 @@ const Sidebar = () => {
               height={1000}
               width={1000}
               quality={100}
-              src="https://images.unsplash.com/photo-1636041282783-e218bb0a217b?q=80&w=2127&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src={`${VIEW_IMAGE}${user?.profilePicture}`}
               className="w-full h-full object-cover rounded-full"
               alt="Profile picture"
             />
@@ -40,7 +41,7 @@ const Sidebar = () => {
                 <RiUserLine className={`text-text_secondary h-4 w-4`} />
                 <p className="font-medium text-base text-text_secondary">My Profile</p>
               </div>
-              {pathname.includes("/profile/my-account") && <FaCheckCircle className={`text-primary`} />}
+              {pathname?.includes("/profile/my-account") && <FaCheckCircle className={`text-primary`} />}
             </div>
           </Link>
 
@@ -50,7 +51,7 @@ const Sidebar = () => {
                 <IoDocumentTextOutline className={`text-text_secondary h-4 w-4`} />
                 <p className="font-medium text-base text-text_secondary">My Post</p>
               </div>
-              {pathname.includes("/my-post") && <FaCheckCircle className={`text-primary`} />}
+              {pathname?.includes("/my-post") && <FaCheckCircle className={`text-primary`} />}
             </div>
           </Link>
 
@@ -60,7 +61,7 @@ const Sidebar = () => {
                 <IoNotificationsOutline className={`text-text_secondary h-4 w-4`} />
                 <p className="font-medium text-base text-text_secondary">Notification</p>
               </div>
-              {pathname.includes("/profile/notification") && <FaCheckCircle className={`text-primary`} />}
+              {pathname?.includes("/profile/notification") && <FaCheckCircle className={`text-primary`} />}
             </div>
           </Link>
 

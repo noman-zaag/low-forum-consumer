@@ -8,7 +8,6 @@ import CustomPagination from "../../components/Pagination";
 const RecentPostList = () => {
   const { userPost, loading, error } = useUserPostData("approved");
 
-  console.log(userPost, loading);
   return (
     <div className="flex flex-col gap-2 w-full">
       <p className="font-semibold test-xs sm:text-sm md:text-base xl:text-xl">Recent Approved Posts</p>

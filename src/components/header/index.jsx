@@ -9,8 +9,9 @@ import { IoSearchOutline } from "react-icons/io5";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/contexts/UserContextProvider";
+import { VIEW_IMAGE } from "@/constant/apiUrls";
 
-const Header = ({ children }) => {
+const Header = () => {
   const router = useRouter();
   const { user } = useUserContext(); // Get user and logout function from UserContext
   const menus = [
@@ -89,7 +90,7 @@ const Header = ({ children }) => {
                         height={1000}
                         width={1000}
                         quality={100}
-                        src={user?.profilePicture}
+                        src={`${VIEW_IMAGE}${user?.profilePicture}`}
                         className="w-full h-full object-cover rounded-full"
                         alt="Profile picture"
                       />

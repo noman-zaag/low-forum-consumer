@@ -30,8 +30,8 @@ const SinglePostPageComponent = async ({ params }) => {
             <div>
               <h1 className="font-semibold text-xs sm:text-sm md:text-md lg:text-xl">Related Posts</h1>
               <div className="flex flex-col gap-4">
-                {allPostForSameCategory?.data?.docs ? (
-                  allPostForSameCategory?.data?.docs?.map((post, index) => {
+                {allPostForSameCategory?.data?.docs && allPostForSameCategory.data.docs.length > 0 ? (
+                  allPostForSameCategory?.data?.docs?.slice(0, 5).map((post, index) => {
                     return <SingleRelatedPost post={post} />;
                   })
                 ) : (

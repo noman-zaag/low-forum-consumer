@@ -1,7 +1,7 @@
-import React from "react";
 import Container from "@/components/common/container";
+import React from "react";
 
-const ProfileLoading = () => {
+const Loading = () => {
   return (
     <Container>
       <div className="p-2 sm:p-6 md:p-8 lg:p-10 xl:p-12 flex flex-col gap-6 animate-pulse">
@@ -76,4 +76,4 @@ const ProfileLoading = () => {
   );
 };
 
-export default ProfileLoading;
+export default Loading;

@@ -3,47 +3,74 @@ import React from "react";
 
 const ProfileLoading = () => {
   return (
-    <Container>
-      <div className="py-6 sm:py-8 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
-          <div className="lg:col-span-4 border bg-gray-200 rounded-lg md:rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none md:rounded-br-none animate-pulse">
-            <div className="px-6 py-8 flex flex-col gap-6">
-              <div className="flex items-center justify-start gap-6">
-                <div className="w-10 h-10 rounded-full border-2 border-gray-400 overflow-hidden"></div>
-                <div className="w-24 h-4 bg-gray-400 rounded"></div>
-              </div>
-              <div className="flex flex-col w-full">
-                <div className="flex gap-3 p-3 pl-0 items-center justify-between w-full">
-                  <div className="flex gap-3 items-center">
-                    <div className="h-4 w-4 bg-gray-400 rounded"></div>
-                    <div className="font-medium text-base text-gray-400">My Profile</div>
-                  </div>
-                </div>
-                <div className="flex gap-3 p-3 pl-0 items-center justify-between w-full">
-                  <div className="flex gap-3 items-center">
-                    <div className="h-4 w-4 bg-gray-400 rounded"></div>
-                    <div className="font-medium text-base text-gray-400">My Post</div>
-                  </div>
-                </div>
-                <div className="flex gap-3 p-3 pl-0 items-center justify-between w-full">
-                  <div className="flex gap-3 items-center">
-                    <div className="h-4 w-4 bg-gray-400 rounded"></div>
-                    <div className="font-medium text-base text-gray-400">Notification</div>
-                  </div>
-                </div>
-                <div className="flex gap-3 p-3 pl-0 items-center justify-between w-full">
-                  <div className="flex gap-3 items-center">
-                    <div className="h-4 w-4 bg-gray-400 rounded"></div>
-                    <div className="font-medium text-base text-red-500">Logout</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="lg:col-span-8 border rounded-tr-lg rounded-br-lg animate-pulse">children</div>
+    <div className="p-2 sm:p-6 md:p-8 lg:p-10 xl:p-12 flex flex-col gap-6 animate-pulse">
+      {/* Image uploader section */}
+      <div className="flex flex-col items-start justify-start gap-2 md:gap-4 lg:gap-4">
+        <div className="h-32 w-32 bg-gray-200 rounded-full"></div>
+        <div className="h-4 bg-gray-200 w-1/3 rounded"></div>
+      </div>
+
+      {/* Basic profile info */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <div className="h-4 bg-gray-200 w-full rounded"></div>
+          <div className="h-4 bg-gray-200 w-full rounded"></div>
+        </div>
+        <div className="flex flex-col gap-1 mt-2 md:mt-0">
+          <div className="h-4 bg-gray-200 w-full rounded"></div>
+          <div className="h-4 bg-gray-200 w-full rounded"></div>
+        </div>
+        <div className="h-8 w-20 bg-gray-200 rounded-full mt-2 md:mt-0"></div>
+      </div>
+
+      {/* Counting status */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+        <div className="flex flex-col items-center justify-center border p-3 gap-2 rounded bg-background1">
+          <div className="w-8 h-8 bg-gray-200 rounded"></div>
+          <div className="w-full h-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="flex flex-col items-center justify-center border p-3 gap-2 rounded bg-background1">
+          <div className="w-8 h-8 bg-gray-200 rounded"></div>
+          <div className="w-full h-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="flex flex-col items-center justify-center border p-3 gap-2 rounded bg-background1">
+          <div className="w-8 h-8 bg-gray-200 rounded"></div>
+          <div className="w-full h-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="flex flex-col items-center justify-center border p-3 gap-2 rounded bg-background1">
+          <div className="w-8 h-8 bg-gray-200 rounded"></div>
+          <div className="w-full h-4 bg-gray-200 rounded"></div>
         </div>
       </div>
-    </Container>
+
+      {/* See recent Post */}
+      <div className="flex flex-col gap-2">
+        <div className="animate-pulse p-4 border rounded bg-background1 flex flex-row items-center justify-between">
+          <div className="line-clamp-1 h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 w-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="animate-pulse p-4 border rounded bg-background1 flex flex-row items-center justify-between">
+          <div className="line-clamp-1 h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 w-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="animate-pulse p-4 border rounded bg-background1 flex flex-row items-center justify-between">
+          <div className="line-clamp-1 h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 w-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="animate-pulse p-4 border rounded bg-background1 flex flex-row items-center justify-between">
+          <div className="line-clamp-1 h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 w-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="animate-pulse p-4 border rounded bg-background1 flex flex-row items-center justify-between">
+          <div className="line-clamp-1 h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 w-4 bg-gray-200 rounded"></div>
+        </div>
+        <div className="animate-pulse p-4 border rounded bg-background1 flex flex-row items-center justify-between">
+          <div className="line-clamp-1 h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 w-4 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    </div>
   );
 };
 

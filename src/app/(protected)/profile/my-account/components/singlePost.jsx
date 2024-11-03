@@ -1,3 +1,5 @@
+"use client";
+
 import { useUiContext } from "@/contexts/UiContextProvider/uiContextProvider";
 import { Badge, Modal, Popover } from "antd";
 import Link from "next/link";

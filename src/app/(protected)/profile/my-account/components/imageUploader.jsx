@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { IoCamera } from "react-icons/io5";
-import axios from "axios";
+import webpfy from "webpfy";
+import { isImageInvalid } from "@/utils";
+import useMessageToast from "@/hooks/useMessageToast";
+import { VIEW_IMAGE } from "@/constant/apiUrls";
 
-const ImageUpload = ({ initialProfileImage }) => {
+const ImageUpload = ({ initialProfileImage, handleSetPreviewImage, previewImage, setSelectedImageInfo }) => {
   const fileInputRef = useRef(null);
-  const [profileImage, setProfileImage] = useState(initialProfileImage);
-  const [previewImage, setPreviewImage] = useState(null);
+  const { showMessage, contextHolder } = useMessageToast();
 
   // Open file input dialog
   const handleIconClick = () => {
@@ -17,28 +19,46 @@ const ImageUpload = ({ initialProfileImage }) => {
   // Handle file selection and show preview
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
+    const errorMessage = await isImageInvalid(file);
+
+    if (errorMessage) {
+      showMessage("error", errorMessage);
+
+      event.target.value = null;
+      return;
+    }
+
     if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setPreviewImage(previewUrl);
-
-      // Make API call to update profile image
-      const formData = new FormData();
-      formData.append("profileImage", file);
-
       try {
-        const response = await axios.post("/api/update-profile-image", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+        const { webpBlob, fileName } = await webpfy({
+          image: file,
         });
-        if (response.status === 200) {
-          // Update profile image on successful upload
-          setProfileImage(response.data.profileImageUrl);
-          setPreviewImage(null); // Clear the preview
-        } else {
-          console.error("Failed to update profile image.");
-        }
+        // convert image to base64 and pass the webpBlob, fileName and base64 file to the parent component
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          // handleImageUpload(webpBlob, fileName);
+          setSelectedImageInfo({ imageName: fileName, imageUrl: webpBlob });
+          handleSetPreviewImage(e.target.result);
+        };
+        reader.readAsDataURL(event.target.files[0]);
       } catch (error) {
-        console.error("Error updating profile image:", error);
+        showMessage("error", "Error converting image to WebP");
       }
+
+      // try {
+      //   const response = await axios.post("/api/update-profile-image", formData, {
+      //     headers: { "Content-Type": "multipart/form-data" },
+      //   });
+      //   if (response.status === 200) {
+      //     // Update profile image on successful upload
+      //     setProfileImage(response.data.profileImageUrl);
+      //     setPreviewImage(null); // Clear the preview
+      //   } else {
+      //     console.error("Failed to update profile image.");
+      //   }
+      // } catch (error) {
+      //   console.error("Error updating profile image:", error);
+      // }
     }
   };
 
@@ -46,7 +66,7 @@ const ImageUpload = ({ initialProfileImage }) => {
     <div className="relative w-32 h-32">
       {/* Profile Image */}
       <img
-        src={previewImage || profileImage}
+        src={previewImage || `${VIEW_IMAGE}${initialProfileImage}`}
         alt="Profile"
         className="w-full h-full object-cover rounded-full border"
       />
@@ -61,6 +81,8 @@ const ImageUpload = ({ initialProfileImage }) => {
 
       {/* Hidden File Input */}
       <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+
+      {contextHolder}
     </div>
   );
 };
