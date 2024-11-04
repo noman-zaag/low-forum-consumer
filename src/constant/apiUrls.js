@@ -27,3 +27,6 @@ export const LIKE_POST = `${BASEURL}/likes`;
 export const GET_RECENT_POST_URL = `${BASEURL}/posts/my-posts`;
 export const UPLOAD_IMAGE_URL = `${BASEURL}/files/images`;
 export const UPDATE_PROFILE_DATA_URL = `${BASEURL}/users/profile`;
+
+// comments
+export const COMMENTS = `${BASEURL}/comments`;

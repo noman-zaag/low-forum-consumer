@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import useMessageToast from "@/hooks/useMessageToast";
-import { Divider, Popover } from "antd";
+import { Divider, Input, Popover } from "antd";
 import { format } from "date-fns";
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from "next-share";
 import Image from "next/image";
@@ -13,6 +13,8 @@ import { likePost } from "@/services/SinglePost";
 import { getCookie } from "cookies-next";
 import { USER_TOKEN } from "@/constant/cookiesKeys";
 import { useUserContext } from "@/contexts/UserContextProvider";
+import Comments from "./comments";
+import { useCommentContext } from "@/contexts/CommentContextProvider";
 
 const SinglePostComponent = ({ singlePost }) => {
   const [postUrl, setPostUrl] = useState("");
@@ -20,6 +22,7 @@ const SinglePostComponent = ({ singlePost }) => {
   const [openSharePopup, setOpenSharePopup] = useState(false);
   const { user } = useUserContext();
   const { showMessage, contextHolder, closeMessage } = useMessageToast();
+  const { fetchComments, comments, setPostId } = useCommentContext();
   const token = getCookie(USER_TOKEN);
 
   useEffect(() => {
@@ -28,6 +31,9 @@ const SinglePostComponent = ({ singlePost }) => {
       // Get the base URL from the window location
       setPostUrl(`${window.location.protocol}//${window.location.host}/post/${singlePost?._id}`);
     }
+
+    setPostId(singlePost?._id);
+    fetchComments(singlePost?._id);
   }, []);
 
   const copyToClipboard = async (text) => {
@@ -211,7 +217,22 @@ const SinglePostComponent = ({ singlePost }) => {
       </div>
 
       {/* Comment section */}
-      <p>Comment section</p>
+      <div className="mb-4 p-4 rounded-lg bg-gray-100 text-gray-700">
+        <p className="text-lg font-semibold">Join the Conversation</p>
+        <p className="mt-2 text-sm">
+          We value your insights! Share your thoughts, ask questions, or start a discussion in the comments below.
+          Please keep it respectful and constructive, as we aim to build a positive community experience for everyone.
+        </p>
+      </div>
+      <div>
+        <div className="flex flex-col gap-5 items-start">
+          <Input.TextArea style={{ height: 150 }} placeholder="Write your comment" />
+
+          <button className="mb-5 p-3 bg-primary text-white rounded-md">Comment</button>
+        </div>
+
+        <Comments comments={comments} />
+      </div>
 
       {contextHolder}
     </div>
