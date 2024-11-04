@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Checkbox, Spin } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import Link from "next/link";
@@ -15,6 +15,17 @@ const SignIn = () => {
   const { contextHolder, showMessage, closeMessage } = useMessageToast();
   const { setUser } = useUserContext();
   const router = useRouter();
+  const [redirectUrl, setRedirectUrl] = useState("/");
+
+  useEffect(() => {
+    // Get the redirect URL from the query parameters if it exists
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect");
+
+    if (redirect) {
+      setRedirectUrl(redirect);
+    }
+  }, []);
 
   const onFinish = async (values) => {
     showMessage("loading", "You are logging. Please Wait...");
@@ -39,7 +50,7 @@ const SignIn = () => {
       router.refresh();
 
       // check QueryParams and redirect.
-      router.push("/");
+      router.push(redirectUrl);
     }
 
     // const userInfo = getCookie(USER_INFO);

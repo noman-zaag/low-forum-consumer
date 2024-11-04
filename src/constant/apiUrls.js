@@ -18,9 +18,10 @@ export const FORUM_CATEGORIES = `${BASEURL}/categories`;
 export const VIEW_IMAGE = `${BASEURL}/files/view-image?key=`;
 export const GET_POSTS = `${BASEURL}/posts`;
 
-// Post page.
+// Post.
 export const CREATE_POST = `${BASEURL}/posts`;
 export const FOR_AXIOS = `/posts`;
+export const LIKE_POST = `${BASEURL}/likes`;
 
 // profile
 export const GET_RECENT_POST_URL = `${BASEURL}/posts/my-posts`;

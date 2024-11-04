@@ -16,7 +16,6 @@ const LoadMorePost = ({ totalPages }) => {
   const [totalPage, setTotalPage] = useState(totalPages);
 
   const searchParams = useSearchParams();
-
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -32,7 +31,7 @@ const LoadMorePost = ({ totalPages }) => {
       page: page,
       limit: pageLimit,
     });
-  }, [searchParams]);
+  }, [searchParams, pageLimit]);
 
   const loadMoreProducts = async () => {
     setLoading(true);
@@ -40,16 +39,12 @@ const LoadMorePost = ({ totalPages }) => {
     // Update params with the current page value
     const currentParams = { ...params, page };
 
-    const posts = await getForumFilterPost(currentParams);
+    const response = await getForumFilterPost(currentParams);
 
-    if (posts?.status === 200) {
-      const newPosts = posts.data.docs;
+    if (response?.status === 200) {
+      const newPosts = response.data.docs;
       setPosts((prev) => [...prev, ...newPosts]);
-      setTotalPage(posts.data.totalPages);
-    }
-
-    if (!posts) {
-      return new Error("Sorry, Product not found....");
+      setTotalPage(response.data.totalPages);
     }
 
     setLoading(false);
@@ -58,24 +53,35 @@ const LoadMorePost = ({ totalPages }) => {
   useEffect(() => {
     if (inView && page <= totalPage) {
       loadMoreProducts();
-      setPage((prevPage) => prevPage + 1);
+      setPage((prevPage) => prevPage + 1); // Increment the page count after loading more products
     }
+    console.log("inview change.", page, totalPage);
   }, [inView]);
+
+  // useEffect(() => {
+  //   // setPage(1);
+  //   console.log("params change");
+  //   setPage(1);
+  //   setPosts([]);
+
+  //   loadMoreProducts();
+  // }, [params.categoryId, params.sortBy]);
 
   return (
     <div>
+      {/* Render actual posts */}
       <PostList posts={posts} />
 
       {/* Loading Skeletons */}
       <div ref={ref}>
         {loading && (
-          <div className="flex flex-col gap-5">
+          <>
             <SkeletonPost />
             <SkeletonPost />
             <SkeletonPost />
             <SkeletonPost />
             <SkeletonPost />
-          </div>
+          </>
         )}
       </div>
     </div>

@@ -1,5 +1,6 @@
 import axiosPublicInstance from "@/config/axiosPublic";
-import { GET_POSTS } from "@/constant/apiUrls";
+import { GET_POSTS, LIKE_POST } from "@/constant/apiUrls";
+import axios from "axios";
 
 export const getSinglePost = async (params, fetchBy, categoryId = "") => {
   try {
@@ -15,5 +16,31 @@ export const getSinglePost = async (params, fetchBy, categoryId = "") => {
 
     // Return a consistent error object
     return { error: true, message: error?.message || "Failed to fetch post" };
+  }
+};
+
+export const likePost = async (targetId, targetType = "Post", token) => {
+  try {
+    const res = await axios.post(
+      LIKE_POST,
+      { targetId, targetType },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+
+    return {
+      message: res.data?.message || "Post created successfully",
+      error: false,
+      result: res.data,
+      isDelete: res?.data.doc?.isDeleted,
+    };
+  } catch (error) {
+    console.error("Error in getSinglePost:", error);
+
+    // Return a consistent error object
+    return { error: true, message: error?.response?.data?.message || "Sorry ! Failed to like this post." };
   }
 };

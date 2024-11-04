@@ -1,11 +1,136 @@
 "use client";
 
-import { Divider } from "antd";
+import React, { useEffect, useState } from "react";
+import useMessageToast from "@/hooks/useMessageToast";
+import { Divider, Popover } from "antd";
 import { format } from "date-fns";
+import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from "next-share";
 import Image from "next/image";
-import React from "react";
+import { FaFacebook, FaLinkedin } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { MdLink } from "react-icons/md";
+import { likePost } from "@/services/SinglePost";
+import { getCookie } from "cookies-next";
+import { USER_TOKEN } from "@/constant/cookiesKeys";
+import { useUserContext } from "@/contexts/UserContextProvider";
 
 const SinglePostComponent = ({ singlePost }) => {
+  const [postUrl, setPostUrl] = useState("");
+  const [like, setLike] = useState(singlePost?.likesCount);
+  const [openSharePopup, setOpenSharePopup] = useState(false);
+  const { user } = useUserContext();
+  const { showMessage, contextHolder, closeMessage } = useMessageToast();
+  const token = getCookie(USER_TOKEN);
+
+  useEffect(() => {
+    // Check if the window object is available (client-side only)
+    if (typeof window !== "undefined") {
+      // Get the base URL from the window location
+      setPostUrl(`${window.location.protocol}//${window.location.host}/post/${singlePost?._id}`);
+    }
+  }, []);
+
+  const copyToClipboard = async (text) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      // Use navigator.clipboard.writeText if supported and on a secure context (https)
+      try {
+        await navigator.clipboard.writeText(text);
+        showMessage("success", "This post is successfully copied to the clipboard!");
+      } catch (error) {
+        console.error("Failed to copy text to clipboard:", error);
+      }
+    } else {
+      // Fallback for unsupported browsers or insecure contexts
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed"; // Avoid scrolling to bottom
+      textArea.style.opacity = "0"; // Make it invisible
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand("copy"); // Still works as a fallback
+        console.log("Text copied to clipboard");
+      } catch (error) {
+        console.error("Failed to copy text:", error);
+      }
+
+      document.body.removeChild(textArea);
+    }
+  };
+
+  const shareLink = (
+    <div className="flex flex-col gap-3">
+      <div
+        onClick={() => copyToClipboard(postUrl)}
+        className="flex flex-row justify-start items-center gap-3 border-b py-2 cursor-pointer text-text_secondary hover:text-black"
+      >
+        <MdLink className="h-5 w-5" />
+        <span>Copy Link</span>
+      </div>
+
+      <TwitterShareButton
+        url={postUrl}
+        title={singlePost?.title}
+        hashtag={`${singlePost?.description} ${singlePost?.categoryName}` || ""}
+      >
+        <div className="flex flex-row justify-start items-center gap-3 cursor-pointer text-text_secondary hover:text-black">
+          <FaXTwitter className="h-5 w-5" />
+          <span>Share on X</span>
+        </div>
+      </TwitterShareButton>
+
+      <FacebookShareButton
+        url={postUrl}
+        quote={`next-share is a social share buttons for your next React apps.`}
+        hashtag={`#${singlePost?.categoryName}`}
+      >
+        <div className="flex flex-row justify-start items-center gap-3  cursor-pointer text-text_secondary hover:text-black">
+          <FaFacebook className="h-5 w-5" />
+          <span>Share on Facebook</span>
+        </div>
+      </FacebookShareButton>
+
+      <LinkedinShareButton
+        url={postUrl}
+        quote={singlePost?.title}
+        content={`${singlePost?.description} ${singlePost?.categoryName}` || ""}
+      >
+        <div className="flex flex-row justify-start items-center gap-3 cursor-pointer text-text_secondary hover:text-black">
+          <FaLinkedin className="h-5 w-5" />
+          <span>Share on LinkedIn</span>
+        </div>
+      </LinkedinShareButton>
+    </div>
+  );
+
+  const handleLike = async (event) => {
+    event.stopPropagation();
+    if (user && token) {
+      // make like
+      const likeRes = await likePost(singlePost?._id, "Post", token);
+
+      if (likeRes.error) {
+        showMessage("error", likeRes.message);
+      } else {
+        if (likeRes?.isDelete) {
+          // for unlike.. isDeleted === true means unlike
+          setLike((ps) => ps - 1);
+        } else {
+          setLike((ps) => ps + 1);
+        }
+      }
+    } else {
+      // redirect to login page
+      router.push(`/login?redirect=/post/${post?._id}`);
+    }
+  };
+
+  const handleOpenSharePopup = (newOpen) => {
+    setOpenSharePopup(newOpen);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* profile section */}
@@ -53,9 +178,9 @@ const SinglePostComponent = ({ singlePost }) => {
 
       <div>
         <div className="flex items-center">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center cursor-pointer" onClick={handleLike}>
             <Image height={20} width={20} alt="like icon" quality={100} src={"/assets/icon/like_icon.svg"} />
-            <p className="font-medium">{singlePost?.likesCount}</p>
+            <p className="font-medium">{like}</p>
             <p className="text-text_secondary text-sm ">Likes</p>
           </div>
 
@@ -69,15 +194,26 @@ const SinglePostComponent = ({ singlePost }) => {
 
           <Divider type="vertical" style={{ margin: 10, padding: 0, height: 20 }} />
 
-          <div className="flex gap-2 items-center">
-            <Image height={20} width={20} alt="like icon" quality={100} src={"/assets/icon/share_icon.svg"} />
-            <p className="text-text_secondary text-sm hidden sm:block">Share</p>
-          </div>
+          <Popover
+            placement="bottom"
+            content={shareLink}
+            title=""
+            trigger="click"
+            open={openSharePopup}
+            onOpenChange={handleOpenSharePopup}
+          >
+            <div className="flex gap-2 items-center">
+              <Image height={20} width={20} alt="like icon" quality={100} src={"/assets/icon/share_icon.svg"} />
+              <p className="text-text_secondary text-sm hidden sm:block">Share</p>
+            </div>
+          </Popover>
         </div>
       </div>
 
       {/* Comment section */}
       <p>Comment section</p>
+
+      {contextHolder}
     </div>
   );
 };
