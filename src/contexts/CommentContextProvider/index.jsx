@@ -2,7 +2,14 @@
 
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { createComment, createReply, deleteComment, getComments, updateComment } from "@/services/CommentService";
+import {
+  createComment,
+  createReply,
+  deleteComment,
+  getComments,
+  likeDislikeComment,
+  updateComment,
+} from "@/services/CommentService";
 import { getCookie } from "cookies-next";
 import { USER_TOKEN } from "@/constant/cookiesKeys";
 import { useUiContext } from "../UiContextProvider/uiContextProvider";
@@ -23,6 +30,7 @@ const addReplyRecursive = (comments, parentId, newReply) => {
       return {
         ...comment,
         replies: [...(comment.replies || []), newReply], // Add the new reply to the replies array
+        repliesCount: (comment.repliesCount || 0) + 1, // Increment repliesCount
       };
     }
 
@@ -31,6 +39,7 @@ const addReplyRecursive = (comments, parentId, newReply) => {
       return {
         ...comment,
         replies: addReplyRecursive(comment.replies, parentId, newReply), // Recursive call
+        repliesCount: comment.repliesCount + 1, // Increment repliesCount for nested replies
       };
     }
 
@@ -73,44 +82,69 @@ const deleteCommentRecursive = (comments, commentId) => {
     }));
 };
 
+// Recursive helper to update likesCount for a specific comment
+const updateLikesCountRecursive = (comments, commentId, increment) => {
+  return comments.map((comment) => {
+    if (comment._id === commentId) {
+      return {
+        ...comment,
+        likesCount: comment.likesCount + (increment ? 1 : -1), // Increment or decrement by 1
+      };
+    }
+    if (comment.replies && comment.replies.length > 0) {
+      return {
+        ...comment,
+        replies: updateLikesCountRecursive(comment.replies, commentId, increment),
+      };
+    }
+    return comment;
+  });
+};
+
 export const CommentContextProvider = ({ children }) => {
   const [comments, setComments] = useState([]);
   const token = getCookie(USER_TOKEN);
   const [postId, setPostId] = useState();
+  const [fetchCommentLoading, setFetchCommentLoading] = useState(false);
   const { showMessage, contextHolder, loading, setLoading, closeMessage } = useMessageToast();
 
   const { user } = useUserContext();
 
-  // Helper function to set the Authorization header
-  const getAuthHeaders = () => ({
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  // Create a comment
+  const handleCreateComment = async (postId, content) => {
+    try {
+      const response = await createComment(postId, content);
 
-  // // Create a comment
-  // const createComment = async (postId, content) => {
-  //   try {
-  //     const response = await axios.post(`/api/comments`, { postId, content }, getAuthHeaders());
-  //     setComments((prevComments) => [...prevComments, response.data.comment]);
-  //     return response.data.comment;
-  //   } catch (error) {
-  //     console.error("Error creating comment:", error);
-  //     throw new Error(error.response?.data?.message || "Failed to create comment.");
-  //   }
-  // };
+      if (response?.status === 200) {
+        const comment = { ...response.data.doc, replies: [], repliesCount: 0 };
+        setComments((ps) => [...ps, comment]);
+
+        return response.status;
+      } else {
+        showMessage("error", error.response?.data?.message || "Failed to delete comment.");
+      }
+    } catch (error) {
+      console.error("Error creating comment:", error);
+
+      showMessage("error", error.response?.data?.message || "Failed to create comment.");
+    }
+  };
 
   // Delete a comment
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await deleteComment(commentId);
-      console.log(response);
-
-      // Remove the comment from the state
-      setComments((prevComments) => deleteCommentRecursive(prevComments, commentId));
+      // console.log(response);
+      if (response?.status === 200) {
+        // Remove the comment from the state
+        setComments((prevComments) => deleteCommentRecursive(prevComments, commentId));
+      } else {
+        showMessage("error", error.response?.data?.message || "Failed to delete comment.");
+      }
     } catch (error) {
       console.error("Error deleting comment:", error);
-      throw new Error(error.response?.data?.message || "Failed to delete comment.");
+      showMessage("error", error.response?.data?.message || "Failed to delete comment.");
+      // throw new Error(error.response?.data?.message || "Failed to delete comment.");
     }
   };
 
@@ -132,6 +166,7 @@ export const CommentContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Failed to create comment:", error.message);
+      showMessage("error", error?.response?.data.message || "Something is wrong !");
     }
   };
 
@@ -151,10 +186,42 @@ export const CommentContextProvider = ({ children }) => {
 
   // Fetch comments (optional: for initializing comments or re-fetching)
   const fetchComments = async (postId) => {
-    const response = await getComments(postId);
-    console.log(response);
-    setComments(response.docs);
-    return response.docs;
+    try {
+      setFetchCommentLoading(true);
+
+      const response = await getComments(postId);
+
+      if (response?.status === 200) {
+        setFetchCommentLoading(false);
+        setComments(response.data.docs);
+
+        return response.docs;
+      } else {
+        setFetchCommentLoading(false);
+        showMessage("error", response?.data?.message || "An error occurred while updating the like status.");
+      }
+    } catch (error) {
+      showMessage("error", error?.response?.data?.message || "An error occurred while updating the like status.");
+    }
+  };
+
+  // Like or dislike a comment
+  const handleLikeDislikeComment = async (commentId) => {
+    try {
+      const response = await likeDislikeComment(postId, commentId, "Comment");
+      // console.log(response, "response");
+
+      if (response?.status === 200) {
+        const { isDeleted } = response.data.doc;
+
+        setComments((prevComments) => updateLikesCountRecursive(prevComments, commentId, !isDeleted));
+      } else {
+        showMessage("error", error?.response?.data?.message || "An error occurred while updating the like status.");
+      }
+    } catch (error) {
+      console.error("Failed to like/dislike comment:", error);
+      showMessage("error", error?.response?.data?.message || "An error occurred while updating the like status.");
+    }
   };
 
   return (
@@ -163,11 +230,14 @@ export const CommentContextProvider = ({ children }) => {
         user,
         comments,
         postId,
+        fetchCommentLoading,
         setPostId,
+        handleCreateComment,
         handleUpdateComment,
         handleDeleteComment,
         fetchComments,
         replyComment,
+        handleLikeDislikeComment,
       }}
     >
       {children}

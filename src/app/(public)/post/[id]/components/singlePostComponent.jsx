@@ -15,6 +15,7 @@ import { USER_TOKEN } from "@/constant/cookiesKeys";
 import { useUserContext } from "@/contexts/UserContextProvider";
 import Comments from "./comments";
 import { useCommentContext } from "@/contexts/CommentContextProvider";
+import CommentSkeleton from "./CommentSkeleton";
 
 const SinglePostComponent = ({ singlePost }) => {
   const [postUrl, setPostUrl] = useState("");
@@ -22,7 +23,9 @@ const SinglePostComponent = ({ singlePost }) => {
   const [openSharePopup, setOpenSharePopup] = useState(false);
   const { user } = useUserContext();
   const { showMessage, contextHolder, closeMessage } = useMessageToast();
-  const { fetchComments, comments, setPostId } = useCommentContext();
+  const { fetchComments, comments, setPostId, handleCreateComment, fetchCommentLoading } = useCommentContext();
+  const [commentContent, setCommentContent] = useState("");
+
   const token = getCookie(USER_TOKEN);
 
   useEffect(() => {
@@ -226,12 +229,31 @@ const SinglePostComponent = ({ singlePost }) => {
       </div>
       <div>
         <div className="flex flex-col gap-5 items-start">
-          <Input.TextArea style={{ height: 150 }} placeholder="Write your comment" />
+          <Input.TextArea
+            value={commentContent}
+            style={{ height: 150 }}
+            placeholder="Write your comment"
+            onChange={(e) => {
+              e.preventDefault();
+              setCommentContent(e.target.value);
+            }}
+          />
 
-          <button className="mb-5 p-3 bg-primary text-white rounded-md">Comment</button>
+          <button
+            className="mb-5 p-3 bg-primary text-white rounded-md"
+            onClick={async () => {
+              const status = await handleCreateComment(singlePost?._id, commentContent);
+
+              if (status === 200) {
+                setCommentContent("");
+              }
+            }}
+          >
+            Comment
+          </button>
         </div>
 
-        <Comments comments={comments} />
+        {fetchCommentLoading ? <CommentSkeleton /> : <Comments comments={comments} />}
       </div>
 
       {contextHolder}

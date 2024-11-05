@@ -1,6 +1,6 @@
 // services/commentService.js
 
-import { COMMENTS } from "@/constant/apiUrls";
+import { COMMENTS, COMMENTS_LIKES } from "@/constant/apiUrls";
 import { USER_TOKEN } from "@/constant/cookiesKeys";
 import axios from "axios";
 import { getCookie } from "cookies-next";
@@ -23,10 +23,10 @@ export const getComments = async (postId) => {
         postId,
       },
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error creating comment:", error);
-    throw new Error(error?.response?.data?.message || "Failed to create comment.");
+    return error;
   }
 };
 
@@ -37,7 +37,7 @@ export const createComment = async (postId, content) => {
     return response;
   } catch (error) {
     console.error("Error creating comment:", error);
-    throw new Error(error.response?.data?.message || "Failed to create comment.");
+    return error;
   }
 };
 
@@ -89,6 +89,21 @@ export const createReply = async (postId, parentId, content) => {
     return response;
   } catch (error) {
     console.error("Error creating comment:", error);
-    throw new Error(error.response?.data?.message || "Failed to create comment.");
+    return error;
+  }
+};
+
+// Like a comment
+export const likeDislikeComment = async (postId, commentId, targetType) => {
+  try {
+    const response = await axios.post(
+      COMMENTS_LIKES,
+      { postId, targetId: commentId, targetType },
+      { params: {}, ...getAuthHeaders() }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error liking comment:", error);
+    return error;
   }
 };

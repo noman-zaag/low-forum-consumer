@@ -7,14 +7,13 @@ import SingleRelatedPost from "./components/singleRelatedPost";
 const SinglePostPageComponent = async ({ params }) => {
   const slug = params.id; // No need for `await` here
   let allPostForSameCategory;
+
   // fetch by id
   const singlePost = await getSinglePost(slug, "id");
   //   fetch by category
   if (singlePost) {
     allPostForSameCategory = await getSinglePost(slug, "category", singlePost?.data?.doc?.categoryId);
   }
-
-  console.log(slug, { singlePost, allPostForSameCategory });
 
   return (
     <div>

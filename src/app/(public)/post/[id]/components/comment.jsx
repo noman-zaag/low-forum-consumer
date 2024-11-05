@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Actions from "./actions";
 import Comments from "./comments";
-import { Input } from "antd";
+import { Avatar, Divider, Input } from "antd";
 import { useCommentContext } from "@/contexts/CommentContextProvider";
+import { VIEW_IMAGE } from "@/constant/apiUrls";
+import { format } from "date-fns";
 
 const Comment = ({ comment }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -12,6 +14,8 @@ const Comment = ({ comment }) => {
   const [commentContent, setCommentContent] = useState("");
   const [replyCommentContent, setReplyCommentContent] = useState("");
   const { replyComment, postId, handleUpdateComment } = useCommentContext();
+
+  console.log({ comment });
 
   const handleEdit = () => {
     setIsEdit(!isEdit);
@@ -26,9 +30,23 @@ const Comment = ({ comment }) => {
     <div className="mb-4">
       {/* Comment Header */}
       <div className="flex items-start gap-3">
-        <div>
-          <p className="font-semibold text-sm">{comment.authorName}</p>
-          <p className="text-gray-500 text-xs">{new Date(comment.createdAt).toLocaleString()}</p>
+        <div className="flex gap-3 items-center justify-center">
+          {comment?.authorImage ? (
+            <Avatar src={`${VIEW_IMAGE}${comment?.authorImage}`} />
+          ) : (
+            <Avatar
+              style={{
+                backgroundColor: "#f56a00",
+              }}
+            >
+              K
+            </Avatar>
+          )}
+          <p className="font-semibold text-sm">{comment.authorName || "Anonymous"}</p>
+          <Divider type="vertical" style={{ margin: 1, padding: 0, height: 20 }} />
+          <p className="text-text_secondary text-sm font-normal">
+            {format(new Date(comment.createdAt), "MMMM d, yyyy")}
+          </p>
         </div>
       </div>
 

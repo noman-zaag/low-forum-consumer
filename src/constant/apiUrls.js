@@ -30,3 +30,4 @@ export const UPDATE_PROFILE_DATA_URL = `${BASEURL}/users/profile`;
 
 // comments
 export const COMMENTS = `${BASEURL}/comments`;
+export const COMMENTS_LIKES = `${BASEURL}/likes`;
