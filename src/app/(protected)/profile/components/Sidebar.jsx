@@ -16,7 +16,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="lg:col-span-4 border bg-background1 rounded-lg md:rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none md:rounded-br-none">
+    <div className="lg:col-span-3 border bg-background1 rounded-lg md:rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none md:rounded-br-none">
       <div className="px-6 py-8 flex flex-col gap-6">
         <div className="flex items-center justify-start gap-6">
           {/* Outer circle with border */}
@@ -65,7 +65,7 @@ const Sidebar = () => {
             </div>
           </Link>
 
-          <div className="flex gap-3 p-3 pl-0 items-center justify-between w-full" onClick={logout}>
+          <div className="flex gap-3 p-3 pl-0 items-center justify-between w-full cursor-pointer" onClick={logout}>
             <div className="flex gap-3 items-center">
               <RxExit className={`text-red-500 h-4 w-4`} />
               <p className="font-medium text-base text-red-500">Logout</p>

@@ -17,7 +17,7 @@ const Actions = ({ comment, handleEdit, handleAddReply }) => {
 
   const handleLike = () => {
     if (user && token) {
-      handleLikeDislikeComment(comment?._id);
+      handleLikeDislikeComment(comment?._id, comment?.commentAuthor);
     } else {
       router.push(`/login?redirect=/post/${postId}`);
     }

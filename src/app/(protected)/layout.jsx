@@ -11,10 +11,11 @@ const ProfileLayout = ({ children }) => {
     <div className={`py-6 sm:py-8 md:py-12 ${blur ? "blur-sm" : ""}`}>
       <Container className="grid grid-cols-1 lg:grid-cols-12 gap-0 ">
         {/* Sidebar - occupies 4 columns on large screens */}
+
         <Sidebar />
 
         {/* Details section - occupies 10 columns on large screens */}
-        <div className="lg:col-span-8 border rounded-tr-lg rounded-br-lg">{children}</div>
+        <div className="lg:col-span-9 border rounded-tr-lg rounded-br-lg">{children}</div>
       </Container>
     </div>
   );

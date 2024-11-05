@@ -1,3 +1,5 @@
+import io from "socket.io-client";
+
 const { ENV_VARIABLE, ENV_VARIABLE_FOR_LOCAL } = require("@/constant/env");
 
 const domain = ENV_VARIABLE ?? ENV_VARIABLE_FOR_LOCAL ? ENV_VARIABLE ?? ENV_VARIABLE_FOR_LOCAL : "";
@@ -31,3 +33,10 @@ export const UPDATE_PROFILE_DATA_URL = `${BASEURL}/users/profile`;
 // comments
 export const COMMENTS = `${BASEURL}/comments`;
 export const COMMENTS_LIKES = `${BASEURL}/likes`;
+
+// socket url
+export const LAWYER_SOCKET_CONNECTION = process.env.NEXT_PUBLIC_LAWYER_SOCKET_DOMAIN;
+export const socket = io(process.env.NEXT_PUBLIC_LAWYER_SOCKET_DOMAIN);
+
+// notification
+export const NOTIFICATION = `${BASEURL}/notifications`;

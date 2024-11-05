@@ -15,8 +15,6 @@ const Comment = ({ comment }) => {
   const [replyCommentContent, setReplyCommentContent] = useState("");
   const { replyComment, postId, handleUpdateComment } = useCommentContext();
 
-  console.log({ comment });
-
   const handleEdit = () => {
     setIsEdit(!isEdit);
   };

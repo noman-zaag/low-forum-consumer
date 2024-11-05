@@ -206,9 +206,9 @@ export const CommentContextProvider = ({ children }) => {
   };
 
   // Like or dislike a comment
-  const handleLikeDislikeComment = async (commentId) => {
+  const handleLikeDislikeComment = async (commentId, authorId) => {
     try {
-      const response = await likeDislikeComment(postId, commentId, "Comment");
+      const response = await likeDislikeComment(postId, commentId, "Comment", authorId);
       // console.log(response, "response");
 
       if (response?.status === 200) {

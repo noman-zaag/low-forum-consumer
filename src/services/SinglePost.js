@@ -19,11 +19,11 @@ export const getSinglePost = async (params, fetchBy, categoryId = "") => {
   }
 };
 
-export const likePost = async (targetId, targetType = "Post", token) => {
+export const likePost = async (targetId, targetType = "Post", token, authorId) => {
   try {
     const res = await axios.post(
       LIKE_POST,
-      { targetId, targetType },
+      { targetId, targetType, authorId },
       {
         headers: {
           Authorization: token,

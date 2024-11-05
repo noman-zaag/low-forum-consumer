@@ -53,7 +53,7 @@ const SinglePostCard = ({ post, className }) => {
     event.stopPropagation();
     if (user && token) {
       // make like
-      const likeRes = await likePost(post?._id, "Post", token);
+      const likeRes = await likePost(post?._id, "Post", token, post?.authorId);
 
       if (likeRes.error) {
         showMessage("error", likeRes.message);

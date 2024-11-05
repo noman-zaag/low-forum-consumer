@@ -4,16 +4,18 @@ import React from "react";
 import Container from "../common/container";
 import Icons from "../../../public/assets/icon";
 import Image from "next/image";
-import { Divider, Input } from "antd";
+import { Badge, Divider, Input } from "antd";
 import { IoSearchOutline } from "react-icons/io5";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/contexts/UserContextProvider";
 import { VIEW_IMAGE } from "@/constant/apiUrls";
+import { useNotificationContext } from "@/contexts/NotificationContextProvider/notificationContext";
 
 const Header = () => {
   const router = useRouter();
   const { user } = useUserContext(); // Get user and logout function from UserContext
+  const { notificationCount } = useNotificationContext();
   const menus = [
     { name: "Home", link: "/" },
     { name: "Forum", link: "/forum" },
@@ -72,14 +74,18 @@ const Header = () => {
             {user ? (
               user?.profilePicture ? (
                 <div className="flex items-center justify-center gap-6">
-                  <Image
-                    src="/assets/icon/notification_icon.svg"
-                    height={100}
-                    width={100}
-                    className="h-5 w-5"
-                    quality={100}
-                    alt="Notification icon"
-                  />
+                  <Badge count={notificationCount || 0} size="small">
+                    <Link href={"/profile/notification"} className="m-0 p-0">
+                      <Image
+                        src="/assets/icon/notification_icon.svg"
+                        height={100}
+                        width={100}
+                        className="h-5 w-5"
+                        quality={100}
+                        alt="Notification icon"
+                      />
+                    </Link>
+                  </Badge>
                   <div
                     className="flex items-center justify-center h-screen"
                     onClick={() => router.push("/profile/my-account")}
@@ -99,14 +105,18 @@ const Header = () => {
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-6">
-                  <Image
-                    src="/assets/icon/notification_icon.svg"
-                    height={100}
-                    width={100}
-                    className="h-5 w-5"
-                    quality={100}
-                    alt="Notification icon"
-                  />
+                  <Badge count={notificationCount || 0} size="small">
+                    <Link href={"/profile/notification"}>
+                      <Image
+                        src="/assets/icon/notification_icon.svg"
+                        height={100}
+                        width={100}
+                        className="h-5 w-5"
+                        quality={100}
+                        alt="Notification icon"
+                      />
+                    </Link>
+                  </Badge>
                   <div
                     className="flex items-center justify-center h-screen"
                     onClick={() => router.push("/profile/my-account")}

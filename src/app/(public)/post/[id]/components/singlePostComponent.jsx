@@ -118,7 +118,7 @@ const SinglePostComponent = ({ singlePost }) => {
     event.stopPropagation();
     if (user && token) {
       // make like
-      const likeRes = await likePost(singlePost?._id, "Post", token);
+      const likeRes = await likePost(singlePost?._id, "Post", token, singlePost?.authorId);
 
       if (likeRes.error) {
         showMessage("error", likeRes.message);

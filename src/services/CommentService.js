@@ -94,11 +94,11 @@ export const createReply = async (postId, parentId, content) => {
 };
 
 // Like a comment
-export const likeDislikeComment = async (postId, commentId, targetType) => {
+export const likeDislikeComment = async (postId, commentId, targetType, authorId) => {
   try {
     const response = await axios.post(
       COMMENTS_LIKES,
-      { postId, targetId: commentId, targetType },
+      { postId, targetId: commentId, targetType, authorId },
       { params: {}, ...getAuthHeaders() }
     );
     return response;
