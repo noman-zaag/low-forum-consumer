@@ -1,7 +1,4 @@
 import React from "react";
-import CommentSkeleton from "./CommentSkeleton";
-import { Input } from "antd";
-import Actions from "./actions";
 import Comment from "./comment";
 
 const Comments = ({ comments }) => {

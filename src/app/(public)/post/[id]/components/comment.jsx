@@ -7,22 +7,27 @@ import { Avatar, Divider, Input } from "antd";
 import { useCommentContext } from "@/contexts/CommentContextProvider";
 import { VIEW_IMAGE } from "@/constant/apiUrls";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 const Comment = ({ comment }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isReply, setIsReply] = useState(false);
   const [commentContent, setCommentContent] = useState("");
   const [replyCommentContent, setReplyCommentContent] = useState("");
-  const { replyComment, postId, handleUpdateComment } = useCommentContext();
+  const { replyComment, postId, handleUpdateComment, user } = useCommentContext();
+  const router = useRouter();
 
   const handleEdit = () => {
     setIsEdit(!isEdit);
   };
 
   const handleAddReply = () => {
-    setIsReply(!isReply);
+    if (user) {
+      setIsReply(!isReply);
+    } else {
+      router.push(`/login?redirect=/post/${postId}`);
+    }
   };
-  //   console.log({ comment, postId }, "comment...");
 
   return (
     <div className="mb-4">
@@ -34,10 +39,10 @@ const Comment = ({ comment }) => {
           ) : (
             <Avatar
               style={{
-                backgroundColor: "#f56a00",
+                backgroundColor: "#248280",
               }}
             >
-              K
+              {`${comment?.authorName}`.charAt(0)?.toUpperCase()}
             </Avatar>
           )}
           <p className="font-semibold text-sm">{comment.authorName || "Anonymous"}</p>
@@ -71,7 +76,6 @@ const Comment = ({ comment }) => {
             <button
               className="bg-primary p-2 rounded-md text-white"
               onClick={() => {
-                console.log("reply..");
                 handleUpdateComment(comment?._id, commentContent);
                 handleEdit();
               }}
@@ -84,7 +88,7 @@ const Comment = ({ comment }) => {
         )}
       </div>
 
-      <div>
+      <div className="mb-2">
         {isReply && (
           <div className="flex flex-col gap-3">
             <Input.TextArea
@@ -97,14 +101,12 @@ const Comment = ({ comment }) => {
             />
 
             <div className="flex gap-4">
-              <button className="bg-red-500 p-2 rounded-md text-white" onClick={handleAddReply}>
+              <button className="bg-red-500 p-2 rounded-md text-white text-xs" onClick={handleAddReply}>
                 Cancel
               </button>
               <button
-                className="bg-primary p-2 rounded-md text-white"
+                className="bg-primary p-2 rounded-md text-white text-xs"
                 onClick={() => {
-                  console.log("reply..");
-                  // handleUpdateComment(comment?._id, commentContent);
                   replyComment(postId, replyCommentContent, comment?._id);
                   handleAddReply();
                 }}

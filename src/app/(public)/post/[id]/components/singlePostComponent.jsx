@@ -16,6 +16,8 @@ import { useUserContext } from "@/contexts/UserContextProvider";
 import Comments from "./comments";
 import { useCommentContext } from "@/contexts/CommentContextProvider";
 import CommentSkeleton from "./CommentSkeleton";
+import { useRouter } from "next/navigation";
+import { VIEW_IMAGE } from "@/constant/apiUrls";
 
 const SinglePostComponent = ({ singlePost }) => {
   const [postUrl, setPostUrl] = useState("");
@@ -25,6 +27,7 @@ const SinglePostComponent = ({ singlePost }) => {
   const { showMessage, contextHolder, closeMessage } = useMessageToast();
   const { fetchComments, comments, setPostId, handleCreateComment, fetchCommentLoading } = useCommentContext();
   const [commentContent, setCommentContent] = useState("");
+  const router = useRouter();
 
   const token = getCookie(USER_TOKEN);
 
@@ -132,7 +135,7 @@ const SinglePostComponent = ({ singlePost }) => {
       }
     } else {
       // redirect to login page
-      router.push(`/login?redirect=/post/${post?._id}`);
+      router.push(`/login?redirect=/post/${singlePost?._id}`);
     }
   };
 
@@ -149,14 +152,25 @@ const SinglePostComponent = ({ singlePost }) => {
           <div className="flex items-center justify-center ">
             {/* Outer circle with border */}
             <div className="w-10 h-10 rounded-full overflow-hidden">
-              <Image
-                height={1000}
-                width={1000}
-                // quality={100}
-                src="https://images.unsplash.com/photo-1636041282783-e218bb0a217b?q=80&w=2127&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                className="w-full h-full object-cover object-center rounded-full"
-                alt="Profile picture"
-              />
+              {singlePost?.profilePicture ? (
+                <Image
+                  height={1000}
+                  width={1000}
+                  quality={100}
+                  src={`${VIEW_IMAGE}${singlePost?.profilePicture}`}
+                  className="w-full h-full object-cover object-center rounded-full"
+                  alt="Profile picture"
+                />
+              ) : (
+                <Image
+                  height={1000}
+                  width={1000}
+                  // quality={100}
+                  src={"/assets/images/default_profile_image.svg"}
+                  className="w-full h-full object-cover object-center rounded-full"
+                  alt="Profile picture"
+                />
+              )}
             </div>
           </div>
           <p className="text-xs sm:text-sm font-normal text-post_text">{singlePost?.userName}</p>
@@ -242,10 +256,15 @@ const SinglePostComponent = ({ singlePost }) => {
           <button
             className="mb-5 p-3 bg-primary text-white rounded-md"
             onClick={async () => {
-              const status = await handleCreateComment(singlePost?._id, commentContent);
+              if (user && token) {
+                const status = await handleCreateComment(singlePost?._id, commentContent);
 
-              if (status === 200) {
-                setCommentContent("");
+                if (status === 200) {
+                  setCommentContent("");
+                }
+              } else {
+                // redirect to login page
+                router.push(`/login?redirect=/post/${singlePost?._id}`);
               }
             }}
           >

@@ -6,6 +6,7 @@ import { getForumCategory, getForumPost } from "@/services/HomeService";
 import SinglePostCard from "@/components/home/SinglePostCard";
 import { GoArrowRight } from "react-icons/go";
 import Link from "next/link";
+import HeroButton from "@/components/home/HeroButton";
 
 export default async function Home() {
   const res = await getForumCategory();
@@ -36,19 +37,7 @@ export default async function Home() {
               Connect with lawyers and legal experts, ask questions, and share knowledge on various branches of law, all
               on an easy-to-use platform.
             </p>
-            <button className="flex gap-3 items-center bg-white text-primary px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition">
-              <span>Get Started</span>
-              <span>
-                <Image
-                  alt="hero button"
-                  src={Icons.heroButtonIcon}
-                  className="h-5 w-5"
-                  height="1000"
-                  width="1000"
-                  quality={100}
-                />
-              </span>
-            </button>
+            <HeroButton />
           </div>
         </Container>
       </div>

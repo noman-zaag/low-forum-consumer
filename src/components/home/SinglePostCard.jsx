@@ -10,11 +10,11 @@ import { getCookie } from "cookies-next";
 import { USER_TOKEN } from "@/constant/cookiesKeys";
 import useMessageToast from "@/hooks/useMessageToast";
 import { likePost } from "@/services/SinglePost";
-const { format } = require("date-fns");
 import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { MdLink } from "react-icons/md";
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, Xs } from "next-share";
+const { format } = require("date-fns");
 
 const SinglePostCard = ({ post, className }) => {
   const router = useRouter();
@@ -196,7 +196,9 @@ const SinglePostCard = ({ post, className }) => {
             {getFirst200Words(post?.description).text}
             {getFirst200Words(post?.description).isMoreThan30Words ? "..." : null}
           </span>
-          <span className="ml-2 whitespace-nowrap self-end cursor-pointer">Read More</span>
+          {getFirst200Words(post?.description).isMoreThan30Words ? (
+            <span className="ml-2 whitespace-nowrap self-end cursor-pointer text-sm">Read More</span>
+          ) : null}
         </p>
       </div>
 
@@ -210,7 +212,7 @@ const SinglePostCard = ({ post, className }) => {
 
         <Divider type="vertical" style={{ margin: 10, padding: 0, height: 20 }} />
 
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center" onClick={handleGetSinglePost}>
           <Image height={20} width={20} alt="like icon" quality={100} src={"/assets/icon/comment_icon.svg"} />
           <p className="font-medium">{post?.commentsCount}</p>
           <p className="text-text_secondary">Comments</p>
