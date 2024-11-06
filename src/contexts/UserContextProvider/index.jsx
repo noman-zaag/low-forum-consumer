@@ -35,12 +35,30 @@ export const UserProvider = ({ children }) => {
     return null;
   };
 
+  // Fetch user form api
+  const fetchUserInfo = async () => {
+    try {
+      const res = await axios.get(UPDATE_PROFILE_DATA_URL, {
+        headers: { Authorization: token },
+      });
+
+      if (res?.status === 200) {
+        setUser(res?.data?.user);
+        setCookie(USER_INFO, res?.data?.user);
+      }
+    } catch (error) {
+      console.error("Failed to mark all as read:", error);
+    }
+  };
+
   // Check if the user is logged in when the component mounts
   useEffect(() => {
     const storedUser = fetchUserFromCookies();
     if (storedUser) {
       setUser(storedUser);
     }
+
+    fetchUserInfo();
   }, []);
 
   // Function to handle user logout
@@ -97,12 +115,14 @@ export const UserProvider = ({ children }) => {
       if (response?.status === 200) {
         showMessage("success", "Update Profile successfully.");
         // update user data.
-        setUser(response?.data?.user);
+        // setUser(response?.data?.user);
         setCookie(USER_INFO, response?.data?.user);
+
+        await fetchUserInfo();
       }
       return response;
     } catch (e) {
-      showMessage("error", error?.message || "Sorry! cannot update your data.");
+      showMessage("error", e?.message || "Sorry! cannot update your data.");
     }
   };
 

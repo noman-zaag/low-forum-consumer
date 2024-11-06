@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getCookie } from "cookies-next";
-import useMessageToast from "@/hooks/useMessageToast"; // Custom toast hook for displaying messages
 import { USER_INFO, USER_TOKEN } from "@/constant/cookiesKeys";
 import { NOTIFICATION } from "@/constant/apiUrls";
 import { useUserContext } from "../UserContextProvider";
@@ -14,6 +13,7 @@ export const useNotificationContext = () => useContext(NotificationContext);
 export const NotificationContextProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [markAll, setMarkAll] = useState(false);
   const { user: userFromContext } = useUserContext();
   const user_info = getCookie(USER_INFO);
   const userFromCookie = user_info ? JSON.parse(user_info) : null;
@@ -66,12 +66,38 @@ export const NotificationContextProvider = ({ children }) => {
     }
   }, [user, token]);
 
-  const markAsRead = (notificationId) => {
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification._id === notificationId ? { ...notification, status: "read" } : notification
-      )
-    );
+  // Mark all notifications as read
+  const markAllAsRead = async () => {
+    try {
+      const res = await axios.patch(
+        `${NOTIFICATION}/mark-as-read`,
+        {},
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      if (res?.status === 200) {
+        setMarkAll(true);
+      }
+    } catch (error) {
+      console.error("Failed to mark all as read:", error);
+    }
+  };
+
+  // Mark a single notification as read
+  const markNotificationAsRead = async (notificationId) => {
+    try {
+      const res = await axios.patch(
+        `${NOTIFICATION}/mark-as-read`,
+        {},
+        { params: { id: notificationId }, headers: { Authorization: token } }
+      );
+
+      console.log(res);
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+    }
   };
 
   const clearNotifications = () => {
@@ -79,7 +105,9 @@ export const NotificationContextProvider = ({ children }) => {
   };
 
   return (
-    <NotificationContext.Provider value={{ notifications, notificationCount, markAsRead, clearNotifications }}>
+    <NotificationContext.Provider
+      value={{ notifications, notificationCount, markAll, markAllAsRead, clearNotifications, markNotificationAsRead }}
+    >
       {children}
     </NotificationContext.Provider>
   );
