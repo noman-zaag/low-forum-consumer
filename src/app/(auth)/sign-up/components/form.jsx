@@ -163,6 +163,22 @@ const SignUpForm = () => {
             <Input.TextArea
               placeholder="Enter your personal information"
               style={{
+                height: 100,
+                resize: "none",
+              }}
+              showCount
+              maxLength={150}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="location"
+            label="Address (Optional)"
+            rules={[{ max: 150, message: "Please Input less then 150 character" }]}
+          >
+            <Input.TextArea
+              placeholder="Enter your address information"
+              style={{
                 height: 120,
                 resize: "none",
               }}

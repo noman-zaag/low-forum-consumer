@@ -18,6 +18,7 @@ import { useCommentContext } from "@/contexts/CommentContextProvider";
 import CommentSkeleton from "./CommentSkeleton";
 import { useRouter } from "next/navigation";
 import { VIEW_IMAGE } from "@/constant/apiUrls";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 
 const SinglePostComponent = ({ singlePost }) => {
   const [postUrl, setPostUrl] = useState("");
@@ -25,7 +26,15 @@ const SinglePostComponent = ({ singlePost }) => {
   const [openSharePopup, setOpenSharePopup] = useState(false);
   const { user } = useUserContext();
   const { showMessage, contextHolder, closeMessage } = useMessageToast();
-  const { fetchComments, comments, setPostId, handleCreateComment, fetchCommentLoading } = useCommentContext();
+  const {
+    fetchComments,
+    comments,
+    setPostId,
+    handleCreateComment,
+    fetchCommentLoading,
+    getLikedPostList,
+    likedPostList,
+  } = useCommentContext();
   const [commentContent, setCommentContent] = useState("");
   const router = useRouter();
 
@@ -40,6 +49,11 @@ const SinglePostComponent = ({ singlePost }) => {
 
     setPostId(singlePost?._id);
     fetchComments(singlePost?._id);
+
+    if (user && token) {
+      getLikedPostList("Post");
+      getLikedPostList("Comment");
+    }
   }, []);
 
   const copyToClipboard = async (text) => {
@@ -122,6 +136,7 @@ const SinglePostComponent = ({ singlePost }) => {
     if (user && token) {
       // make like
       const likeRes = await likePost(singlePost?._id, "Post", token, singlePost?.authorId);
+      await getLikedPostList("Post");
 
       if (likeRes.error) {
         showMessage("error", likeRes.message);
@@ -143,15 +158,25 @@ const SinglePostComponent = ({ singlePost }) => {
     setOpenSharePopup(newOpen);
   };
 
+  const handleGoToProfilePage = () => {
+    router.push(`/public-profile/${singlePost?.authorId}`);
+  };
+
+  const idToCheck = singlePost?._id;
+  const isLiked = likedPostList?.includes(idToCheck);
+
   return (
     <div className="flex flex-col gap-4">
       {/* profile section */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-start gap-2">
         {/* name & image */}
-        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center justify-center">
+        <div
+          className="flex flex-col md:flex-row gap-2 items-start md:items-center justify-center cursor-pointer"
+          onClick={handleGoToProfilePage}
+        >
           <div className="flex items-center justify-center ">
             {/* Outer circle with border */}
-            <div className="w-10 h-10 rounded-full overflow-hidden">
+            <div className="w-10 h-10 rounded-full overflow-hidden cursor-pointer">
               {singlePost?.profilePicture ? (
                 <Image
                   height={1000}
@@ -199,12 +224,23 @@ const SinglePostComponent = ({ singlePost }) => {
         <p className="text-text_secondary text-justify text-sm md:text-base">{singlePost?.description}</p>
       </div>
 
+      {/* Likes and Comment sections */}
       <div>
         <div className="flex items-center">
-          <div className="flex gap-2 items-center cursor-pointer" onClick={handleLike}>
-            <Image height={20} width={20} alt="like icon" quality={100} src={"/assets/icon/like_icon.svg"} />
-            <p className="font-medium">{like}</p>
-            <p className="text-text_secondary text-sm ">Likes</p>
+          <div className="flex gap-2 items-center cursor-pointer w-20" onClick={handleLike}>
+            {isLiked ? (
+              <>
+                <AiFillLike className="h-5 w-5 text-primary" />
+                <p className="font-medium text-primary">{like}</p>
+                <p className="font-semibold text-sm text-primary">Liked</p>
+              </>
+            ) : (
+              <>
+                <AiOutlineLike className="h-5 w-5" />
+                <p className="font-medium">{like}</p>
+                <p className="text-text_secondary text-sm ">Like</p>
+              </>
+            )}
           </div>
 
           <Divider type="vertical" style={{ margin: 10, padding: 0, height: 20 }} />
@@ -241,6 +277,7 @@ const SinglePostComponent = ({ singlePost }) => {
           Please keep it respectful and constructive, as we aim to build a positive community experience for everyone.
         </p>
       </div>
+
       <div>
         <div className="flex flex-col gap-5 items-start">
           <Input.TextArea

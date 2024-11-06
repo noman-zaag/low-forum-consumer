@@ -29,10 +29,14 @@ const Comment = ({ comment }) => {
     }
   };
 
+  const handleGoToProfilePage = () => {
+    router.push(`/public-profile/${comment?.commentAuthor}`);
+  };
+
   return (
     <div className="mb-4">
       {/* Comment Header */}
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-3 cursor-pointer" onClick={handleGoToProfilePage}>
         <div className="flex gap-3 items-center justify-center">
           {comment?.authorImage ? (
             <Avatar src={`${VIEW_IMAGE}${comment?.authorImage}`} />

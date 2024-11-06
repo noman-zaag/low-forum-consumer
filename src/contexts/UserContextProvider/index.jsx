@@ -4,7 +4,7 @@ import { USER_INFO, USER_PERMISSION, USER_TOKEN } from "@/constant/cookiesKeys";
 import { useRouter } from "next/navigation";
 import useMessageToast from "@/hooks/useMessageToast";
 import axios from "axios";
-import { CHANGE_PASSWORD, UPDATE_PROFILE_DATA_URL, UPLOAD_IMAGE_URL } from "@/constant/apiUrls";
+import { CHANGE_PASSWORD, LIKE_POST, UPDATE_PROFILE_DATA_URL, UPLOAD_IMAGE_URL } from "@/constant/apiUrls";
 
 // Create the UserContext
 const UserContext = createContext(null);
@@ -17,6 +17,7 @@ export const useUserContext = () => {
 // UserProvider component to provide user state and login tracking
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null); // User state to track login and user info
+
   const router = useRouter();
   const { showMessage, contextHolder, closeMessage } = useMessageToast();
   const token = getCookie(USER_TOKEN);
@@ -58,7 +59,9 @@ export const UserProvider = ({ children }) => {
       setUser(storedUser);
     }
 
-    fetchUserInfo();
+    if (user && token) {
+      fetchUserInfo();
+    }
   }, []);
 
   // Function to handle user logout
@@ -155,7 +158,14 @@ export const UserProvider = ({ children }) => {
   // Provide the user state and functions to the rest of the app
   return (
     <UserContext.Provider
-      value={{ user, setUser, logout, handleUserProfilePictureUpload, handleUserProfileUpdate, changePassword }}
+      value={{
+        user,
+        setUser,
+        logout,
+        handleUserProfilePictureUpload,
+        handleUserProfileUpdate,
+        changePassword,
+      }}
     >
       {children} {contextHolder}
     </UserContext.Provider>

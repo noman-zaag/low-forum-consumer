@@ -1,6 +1,6 @@
 // context/CommentContextProvider.js
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   createComment,
@@ -15,6 +15,7 @@ import { USER_TOKEN } from "@/constant/cookiesKeys";
 import { useUiContext } from "../UiContextProvider/uiContextProvider";
 import { useUserContext } from "../UserContextProvider";
 import useMessageToast from "@/hooks/useMessageToast";
+import { LIKE_POST } from "@/constant/apiUrls";
 
 const CommentContext = createContext();
 
@@ -106,6 +107,8 @@ export const CommentContextProvider = ({ children }) => {
   const token = getCookie(USER_TOKEN);
   const [postId, setPostId] = useState();
   const [fetchCommentLoading, setFetchCommentLoading] = useState(false);
+  const [likedPostList, setLikedPostList] = useState([]);
+  const [likedCommentList, setLikedCommentList] = useState([]);
   const { showMessage, contextHolder, loading, setLoading, closeMessage } = useMessageToast();
 
   const { user } = useUserContext();
@@ -224,6 +227,38 @@ export const CommentContextProvider = ({ children }) => {
     }
   };
 
+  // Fetch user post like list
+  const getLikedPostList = async (type) => {
+    try {
+      const res = await axios.get(LIKE_POST, {
+        params: {
+          type,
+        },
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (res?.status === 200) {
+        if (type === "Post") {
+          setLikedPostList(res?.data?.doc);
+        } else {
+          setLikedCommentList(res?.data?.doc);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch user list:", error);
+    }
+  };
+
+  // Fetch user list if authenticated
+  useEffect(() => {
+    if (user && token) {
+      getLikedPostList("Post");
+      getLikedPostList("Comment");
+    }
+  }, [user, token]);
+
   return (
     <CommentContext.Provider
       value={{
@@ -231,6 +266,8 @@ export const CommentContextProvider = ({ children }) => {
         comments,
         postId,
         fetchCommentLoading,
+        likedPostList,
+        likedCommentList,
         setPostId,
         handleCreateComment,
         handleUpdateComment,
@@ -238,6 +275,7 @@ export const CommentContextProvider = ({ children }) => {
         fetchComments,
         replyComment,
         handleLikeDislikeComment,
+        getLikedPostList,
       }}
     >
       {children}

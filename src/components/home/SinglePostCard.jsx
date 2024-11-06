@@ -14,6 +14,8 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { MdLink } from "react-icons/md";
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, Xs } from "next-share";
+import { useCommentContext } from "@/contexts/CommentContextProvider";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 const { format } = require("date-fns");
 
 const SinglePostCard = ({ post, className }) => {
@@ -22,6 +24,7 @@ const SinglePostCard = ({ post, className }) => {
   const [like, setLike] = useState(post?.likesCount);
   const [openSharePopup, setOpenSharePopup] = useState(false);
   const [postUrl, setPostUrl] = useState("");
+  const { getLikedPostList, likedPostList } = useCommentContext();
 
   const token = getCookie(USER_TOKEN);
   const { showMessage, contextHolder, closeMessage } = useMessageToast();
@@ -54,6 +57,7 @@ const SinglePostCard = ({ post, className }) => {
     if (user && token) {
       // make like
       const likeRes = await likePost(post?._id, "Post", token, post?.authorId);
+      await getLikedPostList("Post");
 
       if (likeRes.error) {
         showMessage("error", likeRes.message);
@@ -155,6 +159,9 @@ const SinglePostCard = ({ post, className }) => {
     </div>
   );
 
+  const idToCheck = post?._id;
+  const isLiked = likedPostList?.includes(idToCheck);
+
   return (
     <div className={`py-3 flex flex-col gap-2 rounded duration-700 ${className} cursor-pointer`}>
       {/* user info */}
@@ -204,10 +211,20 @@ const SinglePostCard = ({ post, className }) => {
 
       {/* likes, comments, share */}
       <div className="flex items-center">
-        <div className="flex gap-2 items-center" onClick={handleLike}>
-          <Image height={20} width={20} alt="like icon" quality={100} src={"/assets/icon/like_icon.svg"} />
-          <p className="font-medium">{like}</p>
-          <p className="text-text_secondary">Likes</p>
+        <div className="flex gap-2 items-center w-20" onClick={handleLike}>
+          {isLiked ? (
+            <>
+              <AiFillLike className="h-5 w-5 text-primary" />
+              <p className="font-medium text-primary">{like}</p>
+              <p className="font-semibold text-sm text-primary">Liked</p>
+            </>
+          ) : (
+            <>
+              <AiOutlineLike className="h-5 w-5" />
+              <p className="font-medium">{like}</p>
+              <p className="text-text_secondary text-sm ">Like</p>
+            </>
+          )}
         </div>
 
         <Divider type="vertical" style={{ margin: 10, padding: 0, height: 20 }} />

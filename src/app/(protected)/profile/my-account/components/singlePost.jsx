@@ -27,13 +27,11 @@ const SinglePost = ({ post }) => {
     switch (status) {
       case "pending":
         return (
-          <Link href={`/post/${post._id}`}>
-            <Badge.Ribbon text="Pending" color="#ecca00">
-              <div className="p-4 border border-yellow-500 rounded bg-background1 flex flex-row items-center justify-between">
-                <p className="line-clamp-1 text-xs md:text-sm lg:text-base">{post?.title}</p>
-              </div>
-            </Badge.Ribbon>
-          </Link>
+          <Badge.Ribbon text="Pending" color="#ecca00">
+            <div className="p-4 border border-yellow-500 rounded bg-background1 flex flex-row items-center justify-between">
+              <p className="line-clamp-1 text-xs md:text-sm lg:text-base">{post?.title}</p>
+            </div>
+          </Badge.Ribbon>
         );
       case "approved":
         return (
@@ -47,13 +45,12 @@ const SinglePost = ({ post }) => {
       case "rejected":
         return (
           <Popover content={content} title="" placement="topRight">
-            <Link href={`/post/${post._id}`}>
-              <Badge.Ribbon text="Rejected" color="#ee2400">
-                <div className="p-4 rounded bg-[#fff7f6] border border-red-300 flex flex-row items-center justify-between">
-                  <p className="line-clamp-1 text-xs md:text-sm lg:text-base">{post?.title}</p>
-                </div>
-              </Badge.Ribbon>
-            </Link>
+            <Badge.Ribbon text="Rejected" color="#ee2400">
+              <div className="p-4 rounded bg-[#fff7f6] border border-red-300 flex flex-row items-center justify-between">
+                <p className="line-clamp-1 text-xs md:text-sm lg:text-base">{post?.title}</p>
+              </div>
+            </Badge.Ribbon>
+            <Link href={``}></Link>
           </Popover>
         );
       default:
