@@ -8,7 +8,7 @@ const ProfileLayout = ({ children }) => {
   const { blur } = useUiContext();
 
   return (
-    <div className={`py-6 sm:py-8 md:py-12 ${blur ? "blur-sm" : ""}`}>
+    <div className={`py-6 sm:py-8 md:py-12`}>
       <Container className="grid grid-cols-1 lg:grid-cols-12 gap-0 ">
         {/* Sidebar - occupies 4 columns on large screens */}
 

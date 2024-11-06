@@ -4,7 +4,7 @@ import { USER_INFO, USER_PERMISSION, USER_TOKEN } from "@/constant/cookiesKeys";
 import { useRouter } from "next/navigation";
 import useMessageToast from "@/hooks/useMessageToast";
 import axios from "axios";
-import { UPDATE_PROFILE_DATA_URL, UPLOAD_IMAGE_URL } from "@/constant/apiUrls";
+import { CHANGE_PASSWORD, UPDATE_PROFILE_DATA_URL, UPLOAD_IMAGE_URL } from "@/constant/apiUrls";
 
 // Create the UserContext
 const UserContext = createContext(null);
@@ -126,9 +126,37 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const changePassword = async (passwordData) => {
+    showMessage("loading", "Changing your password. Please wait....");
+
+    try {
+      const res = await axios.patch(
+        CHANGE_PASSWORD,
+        { ...passwordData },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      // Close the loading message immediately after the response
+      closeMessage();
+
+      if (res?.status === 200) {
+        showMessage("success", res?.data?.message || "Password changes successfully.");
+      }
+    } catch (e) {
+      showMessage("error", e?.response?.data?.message || "Something is wrong.");
+      return e;
+    }
+  };
+
   // Provide the user state and functions to the rest of the app
   return (
-    <UserContext.Provider value={{ user, setUser, logout, handleUserProfilePictureUpload, handleUserProfileUpdate }}>
+    <UserContext.Provider
+      value={{ user, setUser, logout, handleUserProfilePictureUpload, handleUserProfileUpdate, changePassword }}
+    >
       {children} {contextHolder}
     </UserContext.Provider>
   );

@@ -1,12 +1,13 @@
-import { Form, Input, Select } from "antd";
-import React, { useState } from "react";
+import { Flex, Form, Input, Select, Switch } from "antd";
+import React, { useEffect, useState } from "react";
 import ImageUpload from "./imageUploader";
 import { useUserContext } from "@/contexts/UserContextProvider";
 
 const EditProfileForm = ({ handleCloseModal, userInfo, updateUserInfo }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedImageInfo, setSelectedImageInfo] = useState({ imageName: "", imageUrl: "" });
-  const { handleUserProfilePictureUpload } = useUserContext();
+  const [toggleChangePassword, setToggleChangePassword] = useState(false);
+  const { handleUserProfilePictureUpload, changePassword } = useUserContext();
 
   const handleFinish = async (values) => {
     let profileImageUrl;
@@ -23,6 +24,26 @@ const EditProfileForm = ({ handleCloseModal, userInfo, updateUserInfo }) => {
       values.profilePicture = profileImageUrl;
     }
 
+    // If change password is enabled, update the password
+    if (toggleChangePassword) {
+      const passwordData = {
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+        reTypePassword: values.reTypePassword,
+      };
+
+      const response = await changePassword(passwordData);
+
+      if (response?.status === 400) {
+        return;
+      }
+      console.log(response, "res form com");
+    }
+
+    delete values.oldPassword;
+    delete values.newPassword;
+    delete values.reTypePassword;
+
     updateUserInfo(values);
   };
 
@@ -34,6 +55,19 @@ const EditProfileForm = ({ handleCloseModal, userInfo, updateUserInfo }) => {
     { value: "Abogado", label: "Abogado" },
     { value: "Docente", label: "Docente" },
   ];
+
+  const onChange = (checked) => {
+    console.log(`switch to ${checked}`);
+    if (checked) {
+      setToggleChangePassword(true);
+    } else {
+      setToggleChangePassword(false);
+    }
+  };
+
+  useEffect(() => {
+    setToggleChangePassword(false);
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
@@ -129,6 +163,93 @@ const EditProfileForm = ({ handleCloseModal, userInfo, updateUserInfo }) => {
             />
           </Form.Item>
         </div>
+
+        {/* Password change */}
+        <Flex align="center" justify="space-between">
+          <p className="text-base font-semibold text-[#2A2A2A]">Do you want to change your password ?</p>
+          <Switch onChange={onChange} />
+        </Flex>
+
+        {toggleChangePassword && (
+          <div>
+            <Form.Item
+              name="oldPassword"
+              label="Old Password"
+              className="m-0 p-0"
+              style={{ padding: 0, margin: 0 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please Enter a valid password.",
+                },
+              ]}
+            >
+              <Input
+                type="password"
+                style={{ width: "100%", height: "52px", backgroundColor: "#F3F4F5" }}
+                placeholder="Entered password 8 character long."
+              />
+            </Form.Item>
+          </div>
+        )}
+
+        {toggleChangePassword && (
+          <div>
+            <Form.Item
+              name="newPassword"
+              label="New Password"
+              className="m-0 p-0"
+              style={{ padding: 0, margin: 0 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please Enter a new password.",
+                },
+              ]}
+            >
+              <Input
+                type="password"
+                style={{ width: "100%", height: "52px", backgroundColor: "#F3F4F5" }}
+                placeholder="Enter your new password 8 character long."
+              />
+            </Form.Item>
+          </div>
+        )}
+
+        {toggleChangePassword && (
+          <div>
+            <Form.Item
+              name="reTypePassword"
+              label="Confirm New Password"
+              className="m-0 p-0"
+              style={{ padding: 0, margin: 0 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please re-enter your password!",
+                },
+                {
+                  min: 8,
+                  message: "New Password must be at least 8 characters long.",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("newPassword") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("The new password that you entered does not match!"));
+                  },
+                }),
+              ]}
+            >
+              <Input
+                type="password"
+                style={{ width: "100%", height: "52px", backgroundColor: "#F3F4F5" }}
+                placeholder="Enter your confirm new password 8 character long."
+              />
+            </Form.Item>
+          </div>
+        )}
 
         <div className="flex flex-row items-center justify-end gap-3 mt-5">
           <button

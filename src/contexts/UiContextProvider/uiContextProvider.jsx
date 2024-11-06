@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const UiContext = createContext(null);
 
@@ -12,6 +12,10 @@ export const useUiContext = () => {
 // UiContextProvider component to provide UI design context
 export const UiContextProvider = ({ children }) => {
   const [blur, setBlur] = useState(false);
+
+  useEffect(() => {
+    setBlur(false);
+  }, []);
 
   const handleSetBlur = () => {
     setBlur(!blur);
