@@ -34,7 +34,7 @@ const EditProfileForm = ({ handleCloseModal, userInfo, updateUserInfo }) => {
 
       const response = await changePassword(passwordData);
 
-      if (response?.status === 400) {
+      if (response?.status !== 200) {
         return;
       }
       console.log(response, "res form com");

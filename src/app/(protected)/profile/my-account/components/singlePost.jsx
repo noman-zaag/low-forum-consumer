@@ -21,7 +21,7 @@ const SinglePost = ({ post }) => {
     handleSetBlur(); // Remove blur when the modal closes
   };
 
-  const content = <div>{post?._id}</div>;
+  const content = <div>{post?.rejectionReason || "Rejection Reason"}</div>;
 
   const renderCard = () => {
     switch (status) {
