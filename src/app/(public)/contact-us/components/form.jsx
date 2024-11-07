@@ -1,21 +1,48 @@
 "use client";
 
-import React from "react";
-import { Form, Input } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Spin } from "antd";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+import axiosPublicInstance from "@/config/axiosPublic";
+import { CONTRACT_US } from "@/constant/apiUrls";
+import useMessageToast from "@/hooks/useMessageToast";
 
 const ContactForm = () => {
-  const onFinish = (values) => {
-    console.log("Form values:", values);
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const { showMessage, contextHolder, closeMessage } = useMessageToast();
+
+  const onFinish = async (values) => {
+    setLoading(true);
+
+    try {
+      showMessage("loading", "Your form is submitting, Please wait...");
+
+      // Make the POST API call with axios
+      const response = await axiosPublicInstance.post(CONTRACT_US, values);
+      closeMessage();
+
+      if (response?.status === 200) {
+        showMessage("success", response?.data?.message);
+        form.resetFields();
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+
+      showMessage("error", "Your form is submitting, Please wait...");
+    } finally {
+      setLoading(false); // Stop loading after the process completes
+    }
   };
 
   return (
     <div className="flex flex-col lg:flex-row justify-between items-center gap-4 py-16 space-y-8 md:space-y-0">
+      <Spin fullscreen spinning={loading} />
       {/* Form Section */}
       <div className="w-full lg:w-[50%] bg-white  ">
         <h2 className="text-2xl font-semibold mb-2">Send us a Message!</h2>
         <p className="text-gray-600 mb-6">Want to get in touch? We’d love to hear from you</p>
-        <Form layout="vertical" onFinish={onFinish}>
+        <Form layout="vertical" onFinish={onFinish} form={form}>
           <Form.Item
             name="name"
             label="Name"
@@ -77,6 +104,8 @@ const ContactForm = () => {
           </li>
         </ul>
       </div>
+
+      {contextHolder}
     </div>
   );
 };

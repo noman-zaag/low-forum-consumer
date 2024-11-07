@@ -14,7 +14,6 @@ const ContextWrapper = ({ children }) => {
           <NotificationContextProvider>{children}</NotificationContextProvider>
         </CommentContextProvider>
       </UserProvider>
-      ;
     </UiContextProvider>
   );
 };

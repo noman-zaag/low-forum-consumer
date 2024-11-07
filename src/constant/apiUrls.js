@@ -40,3 +40,6 @@ export const socket = io(process.env.NEXT_PUBLIC_LAWYER_SOCKET_DOMAIN);
 
 // notification
 export const NOTIFICATION = `${BASEURL}/notifications`;
+
+// contact-us
+export const CONTRACT_US = `${BASEURL}/users/contact-us`;
